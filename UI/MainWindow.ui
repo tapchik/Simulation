@@ -293,7 +293,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QListWidget" name="listOfMessagestWidget">
+  <widget class="QListWidget" name="listOfMessagesWidget">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -301,6 +301,9 @@
      <width>256</width>
      <height>192</height>
     </rect>
+   </property>
+   <property name="movement">
+    <enum>QListView::Snap</enum>
    </property>
    <item>
     <property name="text">

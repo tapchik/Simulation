@@ -156,7 +156,7 @@
                <string notr="true">border: 2px solid grey; border-radius: 0px; text-align: center; } QProgressBar::chunk {background-color: #3add36; width: 1px;</string>
               </property>
               <property name="value">
-               <number>60</number>
+               <number>1</number>
               </property>
              </widget>
             </item>

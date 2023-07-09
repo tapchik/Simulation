@@ -5,6 +5,8 @@ import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
 import PyQt5.uic as uic
 
+from random import choice
+
 import simulation as sim
 from readers import read_characters, read_advertisements
 
@@ -16,13 +18,13 @@ Ui_MainWindow, baseClass = uic.loadUiType('UI/MainWindow.ui')
 
 class MainWindow(baseClass, Ui_MainWindow):
 
-	def __init__(self, characters: list[sim.character], options: list[sim.advertisement], *args, **kwargs):
+	def __init__(self, characters: list[sim.character], advertisements: list[sim.advertisement], *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
 		self.DATETIME_START: datetime = datetime.datetime(2023, 7, 15, hour=12, minute=00)
 
 		self.characters: list[sim.character] = characters
-		self.options: list[sim.options] = options
+		self.advertisements: list[sim.advertisement] = advertisements
 		self.ticksPassed: int = 0
 		self.tickSpeed: int = 0
 
@@ -54,11 +56,25 @@ class MainWindow(baseClass, Ui_MainWindow):
 			self.SpeedLabel.setText(f"Speed: {self.tickSpeed}")
 
 	def TickTicked(self):
+			
+			# don't do anything if speed is zero
+			if self.tickSpeed == 0:
+				return
+
 			self.ticksPassed += self.tickSpeed
 			self.TicksLabel.setText(f"({self.ticksPassed} ticks)")
 			self.timer.start(1000)
 			
-			message = characters[0].chooseAction(self.options)
+			chosen_motive = characters[0].chooseMotiveToFulfill()
+			options = list(filter(lambda ad: ad.motive==chosen_motive, self.advertisements))
+			chosen_ad = choice(options) if options != [] else None
+			#chosen_ad = characters[0].chooseAction(self.options)
+
+			#chosen_ad = characters[0].chooseAction(self.options)
+			if chosen_ad != None:
+				item = qtw.QListWidgetItem(f"{self.currentTime}: {chosen_ad.message_start}".format(name=characters[0].name))
+				self.listOfMessagesWidget.insertItem(0, item)
+				characters[0].ActUponAdvertisement(chosen_ad)
 
 			for i in range(len(self.characters)):
 				self.characters[i].decayAllMotives(self.tickSpeed)

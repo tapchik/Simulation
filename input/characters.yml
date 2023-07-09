@@ -2,13 +2,13 @@ characters:
   - name: Максим
     sex: male
     motives: 
-      'sleep': {value: 50, regularity: 1.0}
+      #'sleep': {value: 50, regularity: 1.0}
       'hunger': {regularity: 3.0}
-      'entertainment': {regularity: 2.5}
-      'hygiene': {regularity: 0.8}
-      'bladder': {regularity: 3.0}
-      'social': {regularity: 1.5}
-      'masturbate': {regularity: 1.0}
+      #'entertainment': {regularity: 2.5}
+      #'hygiene': {regularity: 0.8}
+      'bladder': {regularity: 2.0}
+      #'social': {regularity: 1.5}
+      #'masturbate': {regularity: 1.0}
   - name: Андрей
     sex: male
     motives: 
