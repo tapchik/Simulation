@@ -1,0 +1,25 @@
+options: 
+  # FULFILLING BLADDER
+  - action: Поссать
+    motive: bladder
+    status: "{name} ссыт"
+    message_start: "{name} бежит ссать"
+    message_end: "{name} пописил"
+    fulfills: 70 # 100 is max
+    duration: 10 # measured in ticks
+  - action: Посрать
+    motive: bladder
+    status: "{name} срёт"
+    message_start: "{name} "
+    message_end: "{name} высрал всю душу"
+    fulfills: 100
+    duration: 20
+# FULFILLING HUNGER
+  - action:  Перекусить
+    motive: hunger
+    status: 'Перекусывает'
+    message: 'Перекусывает'
+    message_start: "{name} точет поточить зубок" 
+    message_end: "{name} "
+    fulfills: 30
+    duration: 15 # ticks
