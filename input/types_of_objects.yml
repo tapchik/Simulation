@@ -1,0 +1,23 @@
+objects: 
+  # anywhere
+  - type: phone
+    filfills: [social, entertainment]
+  # bathroom
+  - type: toilet
+    fulfills: [bladder]
+  - type: sink
+    fulfills: [hygiene]
+  - type: bath
+    fulfills: [hygiene]
+  # kitchen
+  - type: fridge
+    fulfills: [hunger]
+  # bedroom
+  - type: bed
+    fulfills: [sleep, masturbate]
+  # office
+  - type: computer
+    fulfills: [entertainment]
+  # living room
+  - type: TV
+    fulfills: [entertainment]
