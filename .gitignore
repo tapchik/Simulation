@@ -1,7 +1,4 @@
-readers/__pycache__/
+.venv
 __pycache__/
-
-__pycache__/character.cpython-311.pyc
-__pycache__/motive.cpython-311.pyc
-__pycache__/character.cpython-311.pyc
-__pycache__/motive.cpython-311.pyc
+readers/__pycache__/
+simulation/__pycache__/
