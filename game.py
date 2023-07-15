@@ -61,24 +61,28 @@ class MainWindow(baseClass, Ui_MainWindow):
 			if self.tickSpeed == 0:
 				return
 
+			# time passes
 			self.ticksPassed += self.tickSpeed
 			self.TicksLabel.setText(f"({self.ticksPassed} ticks)")
 			self.timer.start(1000)
 			
-			chosen_motive = characters[0].chooseMotiveToFulfill()
-			options = list(filter(lambda ad: ad.motive==chosen_motive, self.advertisements))
-			chosen_ad = choice(options) if options != [] else None
-			#chosen_ad = characters[0].chooseAction(self.options)
+			if characters[0].isPerformingAction == False: 
+				chosen_motive = characters[0].chooseMotiveToFulfill()
+				options = list(filter(lambda ad: ad.motive==chosen_motive, self.advertisements))
+				action = choice(options) if options != [] else None
+			
+				if action != None:
+					characters[0].currentAdvertisement = action
+					characters[0].timeStartedAdvertisment = self.ticksPassed
+					item = qtw.QListWidgetItem(f"{self.currentTime}: {action.message_start}".format(name=characters[0].name))
+					self.listOfMessagesWidget.insertItem(0, item)
+			characters[0].ActUponAdvertisement(self.ticksPassed, self.tickSpeed)
 
-			#chosen_ad = characters[0].chooseAction(self.options)
-			if chosen_ad != None:
-				item = qtw.QListWidgetItem(f"{self.currentTime}: {chosen_ad.message_start}".format(name=characters[0].name))
-				self.listOfMessagesWidget.insertItem(0, item)
-				characters[0].ActUponAdvertisement(chosen_ad)
-
+			# redraw interface
 			for i in range(len(self.characters)):
 				self.characters[i].decayAllMotives(self.tickSpeed)
 				self.characters[i].reorderMotives()
+				self.characterInfoWidgets[i].DrawStatus(self.characters[i].status)
 				self.characterInfoWidgets[i].DrawMotiveValues(self.characters[i].motives)
 			
 			

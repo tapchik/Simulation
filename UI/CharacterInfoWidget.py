@@ -22,6 +22,13 @@ class CharacterInfoWidget(baseClass, Ui_CharacterInfo):
 		
 		self.DrawMotiveValues(character.motives)
 
+	def DrawStatus(self, status: str | None): 
+		statusLabel = self.StatusLabel
+		if status != None:
+			statusLabel.setText(status)
+		else:
+			statusLabel.setText("Курит")
+
 	def DrawMotiveValues(self, motives: dict[str, motive]):
 		layout = self.ScrollMotivesLayout.layout()
 		# deleting old

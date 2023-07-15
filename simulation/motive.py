@@ -11,16 +11,11 @@ class motive:
             self.value -= reduction
         else:
             self.value = 0
-        #if reduction > self.value - reduction:
-        #    self.value -= reduction
-        #else:
-        #    self.value = 0
-        #self.value = self.value - reduction if reduction - self.value > 0 else 0
     @property
     def percentage(self):
         return int(self.value)
     def increaseValueBy(self, increase: int) -> None:
-        if self.value + increase < 100:
+        if self.value + increase <= 100:
             self.value += increase
         else:
             self.value = 100
