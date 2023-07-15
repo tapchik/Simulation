@@ -302,22 +302,19 @@
      <height>192</height>
     </rect>
    </property>
-   <property name="movement">
-    <enum>QListView::Snap</enum>
-   </property>
    <item>
     <property name="text">
-     <string>12:01: Ксюша: идёт кушать</string>
+     <string>11:58: Андрей: смеётся с видео</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>12:03: Максим: проснулся</string>
+     <string>11:56: Максим: проснулся</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>12:04: Андрей: смеётся с видео</string>
+     <string>11:55: Ксюша: идёт кушать</string>
     </property>
    </item>
   </widget>
