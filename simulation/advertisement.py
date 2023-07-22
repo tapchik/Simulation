@@ -5,7 +5,7 @@ class advertisement:
     action: str
     motive: str
     status: str
-    message_start: str
-    message_end: str
+    message_start: str | None
+    message_end: str | None
     fulfills: int # 100 is max
     duration: int # measured in ticks

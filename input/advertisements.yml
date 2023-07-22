@@ -1,35 +1,39 @@
-options: 
+advertisements: 
   # FULFILLING BLADDER
-  'ad_pee_001':
-    action: Поссать
-    motive: bladder
-    status: "Ссыт"
-    message_start: "{name} бежит ссать"
-    message_end: "{name} пописил"
-    fulfills: 70 # 100 is max
-    duration: 10 # measured in ticks
-  'ad_poop_fast':
-    action: Посрать
-    motive: bladder
-    status: "Срёт"
-    message_start: "{name} бежит срать"
-    message_end: "{name} высрал всю душу"
-    fulfills: 100
-    duration: 20
-  'ad_poop_long':
-    action: Посрать
-    motive: bladder
-    status: "Срёт"
-    message_start: "{name} бежит срать"
-    message_end: "{name} срал целых полчаса! Медаль за отвагу..."
-    fulfills: 100
-    duration: 30
+  'ad_pee_001': 
+    {
+      action: Поссать, status: Ссыт, 
+      motive: bladder, fulfills: 70, duration: 10, 
+      message_start: "{name} бежит ссать", 
+      message_end: "{name} пописил"
+    }
+  'ad_bladder_poop_fast':
+    {
+      action: Посрать, status: Срёт,
+      motive: bladder, fulfills: 100, duration: 20, 
+      message_start: "{name} бежит срать", 
+      message_end: "{name} высрал всю душу", 
+    }
+  'ad_bladder_poop_long': 
+    {
+      action: Посрать, status: Срёт, 
+      motive: bladder, fulfills: 100, duration: 30, 
+      message_start: "{name} бежит срать",
+      message_end: "{name} срал целых полчаса! Медаль за отвагу..."
+    }
 # FULFILLING HUNGER
-  'ad_snack_001':
-    action:  Перекусить
-    motive: hunger
-    status: 'Перекусывает'
-    message_start: "{name} точет зубок" 
-    message_end: "{name} перекусил"
-    fulfills: 30
-    duration: 15 # ticks
+  'ad_hunger_snack_001':
+    {
+      action: Перекусить, status: Перекусывает, 
+      motive: hunger, fulfills: 30, duration: 15, 
+      message_start: "{name} точет зубок", 
+      message_end: "{name} перекусил"
+    }
+# FULFILLING TINKERING
+  'ad_tinkering_sharpen_knifes':
+    {
+      action: Точить ножи, status: Точит ножи, 
+      motive: tinkering, fulfills: 80, duration: 15, 
+      message_start: "{name} точит ножи",
+      message_end: "{name} закончил точить ножи"
+    }

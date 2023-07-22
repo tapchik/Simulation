@@ -5,8 +5,6 @@ import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
 import PyQt5.uic as uic
 
-from random import choice
-
 import simulation as sim
 from readers import read_characters, read_advertisements
 
@@ -22,15 +20,16 @@ class MainWindow(baseClass, Ui_MainWindow):
 		self.DATETIME_START = datetime.datetime(2023, 7, 15, hour=12, minute=00)
 
 		self.simulation: sim.simulation = simulation
+		self.characters_ids: list[str] = list(self.simulation.characters.keys()) # not used yet
 		self.tickSpeed: int = 0
 
 		self.setupUi(self)
 
-		self.characterInfoWidgets: list[CharacterInfoWidget] = [CharacterInfoWidget(char) for char in self.simulation.characters.values()]
+		self.characterInfoWidgets: dict[str, CharacterInfoWidget] = {char_id: CharacterInfoWidget(char) for char_id, char in self.simulation.characters.items()}
 		layout = self.groupBox_3.layout()
 		for i in reversed(range(layout.count())):
 			layout.itemAt(i).widget().setParent(None)
-		for charWidget in self.characterInfoWidgets:
+		for charWidget in self.characterInfoWidgets.values():
 			layout.addWidget(charWidget)
 
 		self.timer=qtc.QTimer()
@@ -51,21 +50,25 @@ class MainWindow(baseClass, Ui_MainWindow):
 		self.tickSpeed = new_value
 		self.SpeedLabel.setText(f"Speed: {self.tickSpeed}")
 
+	def RedrawCharacterInfoWidgets(self):
+		"""Redraws status and motives of characters in the interface. """
+		for char_id in self.simulation.characters.keys():
+			character = self.simulation.characters[char_id]
+			self.characterInfoWidgets[char_id].DrawStatus(character.status)
+			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives)
+
 	def TickTicked(self):
 			
 		# don't do anything if speed is zero
 		if self.tickSpeed == 0:
 			return
 
-		# time passes
-		self.simulation.ticksAdd(self.tickSpeed)
 		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
 		self.timer.start(1000)
 		
 		if characters['max'].isPerformingAction == False: 
 			chosen_motive = characters['max'].chooseMotiveToFulfill()
-			options = list(filter(lambda ad: ad.motive==chosen_motive, self.simulation.advertisements.values()))
-			action = choice(options) if options != [] else None
+			action = self.simulation.chooseAdvertismentToFulfillMotive(chosen_motive)
 		
 			if action != None:
 				characters['max'].currentAdvertisement = action
@@ -74,16 +77,13 @@ class MainWindow(baseClass, Ui_MainWindow):
 				self.listOfMessagesWidget.insertItem(0, item)
 		characters['max'].ActUponAdvertisement(self.simulation.ticksPassed, self.tickSpeed)
 
-		# redraw interface
-		count = 0
-		for character in self.simulation.characters.values():
-			character.decayAllMotives(self.tickSpeed)
-			character.reorderMotives()
-			self.characterInfoWidgets[count].DrawStatus(character.status)
-			self.characterInfoWidgets[count].DrawMotiveValues(character.motives)
-			count += 1
+		# time passes
+		self.simulation.ticksAdd(self.tickSpeed)
+
+		# 
 		
-		
+		# redrawing interface
+		self.RedrawCharacterInfoWidgets()
 		self.TimeLabel.setText(self.currentTime)
 
 

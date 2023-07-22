@@ -1,5 +1,5 @@
 import unittest
-from .. import simulation as sim
+import simulation as sim
   
 class SimpleTest(unittest.TestCase):
   
@@ -12,13 +12,15 @@ class SimpleTest(unittest.TestCase):
         )
         self.simulation = sim.simulation(characters={"alex": character})
 
-    def test1(self):
-        self.simulation.characters['alex'].name = "Alex"
-        self.assertTrue(True)
+    def testCharacterLoads(self):
+        char = self.simulation.characters['alex']
+        self.assertEquals(char.name, "Alex")
 
     # Returns True or False. 
-    def test2(self):        
-        self.assertTrue(True)
+    def testDecayingMotives(self):        
+        char = self.simulation.characters['alex']
+        self.simulation.ticksAdd(10)
+        self.assertEqual(char.motives['bladder'].value, 20)
 
 class HardTet(unittest.TestCase):
     def test11(self):

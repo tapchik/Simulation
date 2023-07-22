@@ -19,7 +19,7 @@ def read_advertisements(filepath: str) -> dict[str, sim.advertisement]:
     advertisements: dict[str, sim.advertisement] = {}
     with open(filepath, encoding="utf8") as fh:
         read_data = yaml.load(fh, Loader=yaml.FullLoader)
-        for ad_id, item in read_data['options'].items():
+        for ad_id, item in read_data['advertisements'].items():
             advertisement = _assemble_advertisement(item)
             advertisements[ad_id] = advertisement
     return advertisements

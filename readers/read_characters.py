@@ -26,5 +26,4 @@ def read_characters(filepath: str) -> dict[str, sim.character]:
         for char_id, item in read_data['characters'].items():
             char = _assemble_character(item)
             characters[char_id] = char
-    print(characters)
     return characters
