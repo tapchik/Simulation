@@ -1,21 +1,32 @@
 options: 
   # FULFILLING BLADDER
-  - action: Поссать
+  'ad_pee_001':
+    action: Поссать
     motive: bladder
     status: "Ссыт"
     message_start: "{name} бежит ссать"
     message_end: "{name} пописил"
     fulfills: 70 # 100 is max
     duration: 10 # measured in ticks
-  - action: Посрать
+  'ad_poop_fast':
+    action: Посрать
     motive: bladder
     status: "Срёт"
     message_start: "{name} бежит срать"
     message_end: "{name} высрал всю душу"
     fulfills: 100
     duration: 20
+  'ad_poop_long':
+    action: Посрать
+    motive: bladder
+    status: "Срёт"
+    message_start: "{name} бежит срать"
+    message_end: "{name} срал целых полчаса! Медаль за отвагу..."
+    fulfills: 100
+    duration: 30
 # FULFILLING HUNGER
-  - action:  Перекусить
+  'ad_snack_001':
+    action:  Перекусить
     motive: hunger
     status: 'Перекусывает'
     message_start: "{name} точет зубок" 

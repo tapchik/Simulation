@@ -14,12 +14,12 @@ def _assemble_advertisement(input: dict) -> sim.advertisement:
     )
     return option
 
-def read_advertisements(filepath: str) -> list[sim.advertisement]:
+def read_advertisements(filepath: str) -> dict[str, sim.advertisement]:
     assert fileExists(filepath), f"File '{filepath}' was not found, can't load objects for simulation"
-    advertisements: list[sim.advertisement] = []
+    advertisements: dict[str, sim.advertisement] = {}
     with open(filepath, encoding="utf8") as fh:
         read_data = yaml.load(fh, Loader=yaml.FullLoader)
-        for item in read_data['options']:
+        for ad_id, item in read_data['options'].items():
             advertisement = _assemble_advertisement(item)
-            advertisements += [advertisement]
+            advertisements[ad_id] = advertisement
     return advertisements

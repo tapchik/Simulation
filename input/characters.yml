@@ -1,5 +1,6 @@
 characters: 
-  - name: Максим
+  max:
+    name: Максим
     sex: male
     motives: 
       #'sleep': {value: 50, regularity: 1.0}
@@ -9,7 +10,8 @@ characters:
       'bladder': {regularity: 2.0}
       #'social': {regularity: 1.5}
       #'masturbate': {regularity: 1.0}
-  - name: Андрей
+  andrew:
+    name: Андрей
     sex: male
     motives: 
       'sleep': {regularity: 1.0}
@@ -19,7 +21,8 @@ characters:
       'bladder': {regularity: 3.0}
       'social': {regularity: 1.5}
       'bicycle': {regularity: 0.6}
-  - name: Ксюша
+  senya:
+    name: Ксюша
     sex: female
     motives: 
       'sleep': {regularity: 1.0}

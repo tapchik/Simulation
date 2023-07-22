@@ -18,12 +18,13 @@ def _assemble_character(input: dict) -> sim.character:
     char = sim.character(name, sex, motives)
     return char
 
-def read_characters(filepath: str) -> list[sim.character]:
+def read_characters(filepath: str) -> dict[str, sim.character]:
     assert fileExists(filepath), f"File '{filepath}' was not found, can't load characters for simulation"
-    characters: list[sim.character] = []
+    characters: dict[str, sim.character] = {}
     with open(filepath, encoding="utf8") as fh:
         read_data = yaml.load(fh, Loader=yaml.FullLoader)
-        for item in read_data['characters']:
+        for char_id, item in read_data['characters'].items():
             char = _assemble_character(item)
-            characters += [char]
+            characters[char_id] = char
+    print(characters)
     return characters

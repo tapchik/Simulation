@@ -16,19 +16,17 @@ Ui_MainWindow, baseClass = uic.loadUiType('UI/MainWindow.ui')
 
 class MainWindow(baseClass, Ui_MainWindow):
 
-	def __init__(self, simulation: sim.simulation, characters: list[sim.character], advertisements: list[sim.advertisement], *args, **kwargs):
+	def __init__(self, simulation: sim.simulation, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
-		self.DATETIME_START: datetime = datetime.datetime(2023, 7, 15, hour=12, minute=00)
+		self.DATETIME_START = datetime.datetime(2023, 7, 15, hour=12, minute=00)
 
 		self.simulation: sim.simulation = simulation
-		self.characters: list[sim.character] = characters
-		self.advertisements: list[sim.advertisement] = advertisements
 		self.tickSpeed: int = 0
 
 		self.setupUi(self)
 
-		self.characterInfoWidgets: list[CharacterInfoWidget] = [CharacterInfoWidget(char) for char in self.simulation.characters]
+		self.characterInfoWidgets: list[CharacterInfoWidget] = [CharacterInfoWidget(char) for char in self.simulation.characters.values()]
 		layout = self.groupBox_3.layout()
 		for i in reversed(range(layout.count())):
 			layout.itemAt(i).widget().setParent(None)
@@ -38,7 +36,6 @@ class MainWindow(baseClass, Ui_MainWindow):
 		self.timer=qtc.QTimer()
 		self.timer.timeout.connect(self.TickTicked)
 		self.timer.start(1000)
-
 		
 		self.SpeedSlider.valueChanged.connect(self.SpeedSliderMoved)
 
@@ -51,49 +48,51 @@ class MainWindow(baseClass, Ui_MainWindow):
 		return current_time.strftime("%H:%M")
 
 	def SpeedSliderMoved(self, new_value: int) -> None:
-			self.tickSpeed = new_value
-			self.SpeedLabel.setText(f"Speed: {self.tickSpeed}")
+		self.tickSpeed = new_value
+		self.SpeedLabel.setText(f"Speed: {self.tickSpeed}")
 
 	def TickTicked(self):
 			
-			# don't do anything if speed is zero
-			if self.tickSpeed == 0:
-				return
+		# don't do anything if speed is zero
+		if self.tickSpeed == 0:
+			return
 
-			# time passes
-			self.simulation.ticksAdd(self.tickSpeed)
-			self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
-			self.timer.start(1000)
-			
-			if characters[0].isPerformingAction == False: 
-				chosen_motive = characters[0].chooseMotiveToFulfill()
-				options = list(filter(lambda ad: ad.motive==chosen_motive, self.advertisements))
-				action = choice(options) if options != [] else None
-			
-				if action != None:
-					characters[0].currentAdvertisement = action
-					characters[0].timeStartedAdvertisment = self.simulation.ticksPassed
-					item = qtw.QListWidgetItem(f"{self.currentTime}: {action.message_start}".format(name=characters[0].name))
-					self.listOfMessagesWidget.insertItem(0, item)
-			characters[0].ActUponAdvertisement(self.simulation.ticksPassed, self.tickSpeed)
+		# time passes
+		self.simulation.ticksAdd(self.tickSpeed)
+		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
+		self.timer.start(1000)
+		
+		if characters['max'].isPerformingAction == False: 
+			chosen_motive = characters['max'].chooseMotiveToFulfill()
+			options = list(filter(lambda ad: ad.motive==chosen_motive, self.simulation.advertisements.values()))
+			action = choice(options) if options != [] else None
+		
+			if action != None:
+				characters['max'].currentAdvertisement = action
+				characters['max'].timeStartedAdvertisment = self.simulation.ticksPassed
+				item = qtw.QListWidgetItem(f"{self.currentTime}: {action.message_start}".format(name=characters['max'].name))
+				self.listOfMessagesWidget.insertItem(0, item)
+		characters['max'].ActUponAdvertisement(self.simulation.ticksPassed, self.tickSpeed)
 
-			# redraw interface
-			for i in range(len(self.characters)):
-				self.characters[i].decayAllMotives(self.tickSpeed)
-				self.characters[i].reorderMotives()
-				self.characterInfoWidgets[i].DrawStatus(self.characters[i].status)
-				self.characterInfoWidgets[i].DrawMotiveValues(self.characters[i].motives)
-			
-			
-			self.TimeLabel.setText(self.currentTime)
+		# redraw interface
+		count = 0
+		for character in self.simulation.characters.values():
+			character.decayAllMotives(self.tickSpeed)
+			character.reorderMotives()
+			self.characterInfoWidgets[count].DrawStatus(character.status)
+			self.characterInfoWidgets[count].DrawMotiveValues(character.motives)
+			count += 1
+		
+		
+		self.TimeLabel.setText(self.currentTime)
 
 
 if __name__=='__main__':
 
-	characters: list[sim.character] = read_characters.read_characters('input/characters.yml')
-	options: list[sim.advertisement] = read_advertisements.read_advertisements('input/advertisements.yml')
-	simulation: sim.simulation = sim.simulation(characters=characters)
+	characters = read_characters.read_characters('input/characters.yml')
+	advertisements = read_advertisements.read_advertisements('input/advertisements.yml')
+	simulation = sim.simulation(characters=characters, advertisements=advertisements)
 
 	app = qtw.QApplication(sys.argv)
-	w = MainWindow(simulation, characters, options)
+	w = MainWindow(simulation)
 	sys.exit(app.exec_())
