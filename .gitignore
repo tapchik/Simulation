@@ -1,4 +1,6 @@
+.pytest_cache
 .venv
+.vscode
 __pycache__/
 readers/__pycache__/
 simulation/__pycache__/

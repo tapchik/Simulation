@@ -12,25 +12,23 @@ from readers import read_characters, read_advertisements
 
 from UI.CharacterInfoWidget import CharacterInfoWidget
 
-#from ui import Ui_MainWindow
-
 Ui_MainWindow, baseClass = uic.loadUiType('UI/MainWindow.ui')
 
 class MainWindow(baseClass, Ui_MainWindow):
 
-	def __init__(self, characters: list[sim.character], advertisements: list[sim.advertisement], *args, **kwargs):
+	def __init__(self, simulation: sim.simulation, characters: list[sim.character], advertisements: list[sim.advertisement], *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
 		self.DATETIME_START: datetime = datetime.datetime(2023, 7, 15, hour=12, minute=00)
 
+		self.simulation: sim.simulation = simulation
 		self.characters: list[sim.character] = characters
 		self.advertisements: list[sim.advertisement] = advertisements
-		self.ticksPassed: int = 0
 		self.tickSpeed: int = 0
 
 		self.setupUi(self)
 
-		self.characterInfoWidgets: list[CharacterInfoWidget] = [CharacterInfoWidget(char) for char in self.characters]
+		self.characterInfoWidgets: list[CharacterInfoWidget] = [CharacterInfoWidget(char) for char in self.simulation.characters]
 		layout = self.groupBox_3.layout()
 		for i in reversed(range(layout.count())):
 			layout.itemAt(i).widget().setParent(None)
@@ -48,7 +46,8 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 	@property
 	def currentTime(self):
-		current_time = self.DATETIME_START + datetime.timedelta(minutes=self.ticksPassed)
+		t = self.simulation.ticksPassed
+		current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
 		return current_time.strftime("%H:%M")
 
 	def SpeedSliderMoved(self, new_value: int) -> None:
@@ -62,8 +61,8 @@ class MainWindow(baseClass, Ui_MainWindow):
 				return
 
 			# time passes
-			self.ticksPassed += self.tickSpeed
-			self.TicksLabel.setText(f"({self.ticksPassed} ticks)")
+			self.simulation.ticksAdd(self.tickSpeed)
+			self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
 			self.timer.start(1000)
 			
 			if characters[0].isPerformingAction == False: 
@@ -73,10 +72,10 @@ class MainWindow(baseClass, Ui_MainWindow):
 			
 				if action != None:
 					characters[0].currentAdvertisement = action
-					characters[0].timeStartedAdvertisment = self.ticksPassed
+					characters[0].timeStartedAdvertisment = self.simulation.ticksPassed
 					item = qtw.QListWidgetItem(f"{self.currentTime}: {action.message_start}".format(name=characters[0].name))
 					self.listOfMessagesWidget.insertItem(0, item)
-			characters[0].ActUponAdvertisement(self.ticksPassed, self.tickSpeed)
+			characters[0].ActUponAdvertisement(self.simulation.ticksPassed, self.tickSpeed)
 
 			# redraw interface
 			for i in range(len(self.characters)):
@@ -93,7 +92,8 @@ if __name__=='__main__':
 
 	characters: list[sim.character] = read_characters.read_characters('input/characters.yml')
 	options: list[sim.advertisement] = read_advertisements.read_advertisements('input/advertisements.yml')
+	simulation: sim.simulation = sim.simulation(characters=characters)
 
 	app = qtw.QApplication(sys.argv)
-	w = MainWindow(characters, options)
+	w = MainWindow(simulation, characters, options)
 	sys.exit(app.exec_())
