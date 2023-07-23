@@ -13,14 +13,13 @@ from UI.MotiveGroupWithBar import MotiveGroupWithBar
 Ui_CharacterInfo, baseClass = uic.loadUiType('UI/CharacterInfoWidget.ui')
 
 class CharacterInfoWidget(baseClass, Ui_CharacterInfo):
-	def __init__(self, character: character, *args, **kwargs):
+	def __init__(self, name: str, status: str, motives: dict[str, int], *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.setupUi(self)
-		self.CharacterNameLabel.setText(character.name)
-
 		
-		
-		self.DrawMotiveValues(character.motives)
+		self.CharacterNameLabel.setText(name)
+		self.DrawStatus(status)
+		self.DrawMotiveValues(motives)
 
 	def DrawStatus(self, status: str | None): 
 		statusLabel = self.StatusLabel
@@ -29,14 +28,14 @@ class CharacterInfoWidget(baseClass, Ui_CharacterInfo):
 		else:
 			statusLabel.setText("Курит")
 
-	def DrawMotiveValues(self, motives: dict[str, motive]):
+	def DrawMotiveValues(self, motives: dict[str, int]):
 		layout = self.ScrollMotivesLayout.layout()
 		# deleting old
 		for i in reversed(range(layout.count())):
 			layout.itemAt(i).widget().setParent(None)
 		# drawing
-		for title, mot in motives.items():
-			mot_groupBox = MotiveGroupWithBar(mot)
+		for title, value in motives.items():
+			mot_groupBox = MotiveGroupWithBar(title, value)
 			layout.addWidget(mot_groupBox)
 		
 		#self.show()

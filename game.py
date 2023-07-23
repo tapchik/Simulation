@@ -22,7 +22,11 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 		self.setupUi(self)
 
-		self.characterInfoWidgets: dict[str, CharacterInfoWidget] = {char_id: CharacterInfoWidget(char) for char_id, char in self.simulation.characters.items()}
+		self.characterInfoWidgets: dict[str, CharacterInfoWidget] = {}
+		for char_id, char in self.simulation.characters.items(): 
+			widget = CharacterInfoWidget(char.name, self.simulation.retrieveCharacterStatus(char_id), self.simulation.retrieveCharacterMotives(char_id)) 
+			self.characterInfoWidgets[char_id] = widget
+		
 		layout = self.groupBox_3.layout()
 		for i in reversed(range(layout.count())):
 			layout.itemAt(i).widget().setParent(None)
@@ -44,9 +48,10 @@ class MainWindow(baseClass, Ui_MainWindow):
 	def RedrawCharacterInfoWidgets(self):
 		"""Redraws status and motives of characters in the interface. """
 		for char_id in self.simulation.characters.keys():
-			character = self.simulation.characters[char_id]
-			self.characterInfoWidgets[char_id].DrawStatus(character.status(self.simulation.ticksPassed))
-			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives)
+			status = self.simulation.retrieveCharacterStatus(char_id)
+			motives = self.simulation.retrieveCharacterMotives(char_id)
+			self.characterInfoWidgets[char_id].DrawStatus(status)
+			self.characterInfoWidgets[char_id].DrawMotiveValues(motives)
 
 	def TickTicked(self):
 			

@@ -11,11 +11,11 @@ from simulation import motive
 Ui_MotiveGroup, baseClass = uic.loadUiType('UI/MotiveGroupWithBar.ui')
 
 class MotiveGroupWithBar(baseClass, Ui_MotiveGroup):
-	def __init__(self, motive: motive, *args, **kwargs):
+	def __init__(self, title: str, value: int, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.setupUi(self)
-		self.MotiveGroupBox.setTitle(motive.title)
-		self.MotiveProgressBar.setValue(motive.percentage)
+		self.MotiveGroupBox.setTitle(title)
+		self.MotiveProgressBar.setValue(value)
 		#self.show()
 
 if __name__=='__main__':

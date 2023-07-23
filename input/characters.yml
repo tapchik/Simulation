@@ -21,6 +21,7 @@ characters:
       'bladder': {regularity: 3.0}
       #'social': {regularity: 1.5}
       #'bicycle': {regularity: 0.6}
+      'tinkering': {regularity: 1.0}
   senya:
     name: Ксюша
     sex: female

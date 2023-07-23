@@ -38,8 +38,10 @@ class character:
         self.motives = {k: v for k, v in sorted(self.motives.items(), key=lambda item: item[1].value)}
 
     def decayAllMotives(self, tickes_passed: int) -> None:
+        immune = self.currentAdvertisement.motive.title if self.currentAdvertisement != None else None
         for key, motive in self.motives.items():
-            motive.decay(tickes_passed)
+            if motive.title != immune:
+                motive.decay(tickes_passed)
 
     def chooseMotiveToFulfill(self) -> str | None:
         # choose three most important motives

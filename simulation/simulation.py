@@ -37,3 +37,14 @@ class simulation:
         options = list(filter(lambda ad: ad.motive==motive, all_ads))
         action = choice(options) if options != [] else None
         return action
+    
+    def retrieveCharacterStatus(self, character_id: str) -> str: 
+        character = self.characters[character_id]
+        return character.status(self.ticksPassed)
+    
+    def retrieveCharacterMotives(self, character_id: str) -> dict[str, int]:
+        character = self.characters[character_id]
+        motives: dict[str, int] = {}
+        for key, mot in character.motives.items(): 
+            motives[key] = mot.percentage
+        return motives
