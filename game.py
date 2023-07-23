@@ -1,5 +1,4 @@
 import sys
-import datetime
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
 import PyQt5.QtGui as qtg
@@ -16,8 +15,6 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 	def __init__(self, simulation: sim.simulation, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-
-		self.DATETIME_START = datetime.datetime(2023, 7, 15, hour=12, minute=00)
 
 		self.simulation: sim.simulation = simulation
 		self.characters_ids: list[str] = list(self.simulation.characters.keys()) # not used yet
@@ -40,12 +37,6 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 		self.show()
 
-	@property
-	def currentTime(self):
-		t = self.simulation.ticksPassed
-		current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
-		return current_time.strftime("%H:%M")
-
 	def SpeedSliderMoved(self, new_value: int) -> None:
 		self.tickSpeed = new_value
 		self.SpeedLabel.setText(f"Speed: {self.tickSpeed}")
@@ -54,7 +45,7 @@ class MainWindow(baseClass, Ui_MainWindow):
 		"""Redraws status and motives of characters in the interface. """
 		for char_id in self.simulation.characters.keys():
 			character = self.simulation.characters[char_id]
-			self.characterInfoWidgets[char_id].DrawStatus(character.status)
+			self.characterInfoWidgets[char_id].DrawStatus(character.status(self.simulation.ticksPassed))
 			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives)
 
 	def TickTicked(self):
@@ -66,25 +57,29 @@ class MainWindow(baseClass, Ui_MainWindow):
 		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
 		self.timer.start(1000)
 		
-		if characters['max'].isPerformingAction == False: 
-			chosen_motive = characters['max'].chooseMotiveToFulfill()
-			action = self.simulation.chooseAdvertismentToFulfillMotive(chosen_motive)
-		
-			if action != None:
-				characters['max'].currentAdvertisement = action
-				characters['max'].timeStartedAdvertisment = self.simulation.ticksPassed
-				item = qtw.QListWidgetItem(f"{self.currentTime}: {action.message_start}".format(name=characters['max'].name))
-				self.listOfMessagesWidget.insertItem(0, item)
-		characters['max'].ActUponAdvertisement(self.simulation.ticksPassed, self.tickSpeed)
+		for character in self.simulation.characters.values(): 
+			# do your thing
+			character.ActUponAdvertisement(self.simulation.ticksPassed, self.tickSpeed)
+			# skipping character if his busy
+			if character.isPerformingAction(self.simulation.ticksPassed): 
+				continue
+			# choosing a motive to fulfill and an action
+			motive_to_fulfill = character.chooseMotiveToFulfill()
+			action = self.simulation.chooseAdvertismentToFulfillMotive(motive_to_fulfill)
+			if action == None: 
+				continue
+			character.currentAdvertisement = action
+			character.timeStartedAdvertisment = self.simulation.ticksPassed
+			# writing a console message
+			item = qtw.QListWidgetItem(f"{self.simulation.currentTime}: {action.message_start}".format(name=character.name))
+			self.listOfMessagesWidget.insertItem(0, item)
 
 		# time passes
 		self.simulation.ticksAdd(self.tickSpeed)
-
-		# 
 		
 		# redrawing interface
 		self.RedrawCharacterInfoWidgets()
-		self.TimeLabel.setText(self.currentTime)
+		self.TimeLabel.setText(self.simulation.currentTime)
 
 
 if __name__=='__main__':

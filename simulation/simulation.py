@@ -1,18 +1,25 @@
-import dataclasses
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import simulation as sim
+import datetime
 
 from random import choice
 
 @dataclass
 class simulation:
-    characters: dict[str, sim.character] = dataclasses.field(default_factory=dict)
-    advertisements: dict[str, sim.advertisement] = dataclasses.field(default_factory=dict)
+    characters: dict[str, sim.character] = field(default_factory=dict)
+    advertisements: dict[str, sim.advertisement] = field(default_factory=dict)
     _ticks: int = 0
+    DATETIME_START = datetime.datetime(2023, 7, 15, hour=12, minute=00)
 
     @property
     def ticksPassed(self) -> int:
         return self._ticks
+
+    @property
+    def currentTime(self):
+        t = self.ticksPassed
+        current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
+        return current_time.strftime("%H:%M")
     
     def ticksAdd(self, ticks: int) -> None: 
         """Moves time forward, increasing tickes and decreasing all characters' motive fulfillment

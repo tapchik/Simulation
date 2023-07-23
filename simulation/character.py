@@ -11,16 +11,28 @@ class character:
     currentAdvertisement: sim.advertisement | None = None
     timeStartedAdvertisment: int | None = None
 
-    @property
-    def isPerformingAction(self) -> bool:
+    def isPerformingAction(self, ticksPassed: int) -> bool:
+        # if not busy
+        if self.currentAdvertisement == None:
+            return False
+        # ending action if it's time is up
+        durationOfPerformance = ticksPassed - self.timeStartedAdvertisment
+        if  durationOfPerformance >= self.currentAdvertisement.duration:
+            self.currentAdvertisement = None
+            self.timeStartedAdvertisment = None
+        # determine
         if self.currentAdvertisement == None:
             return False
         else:
             return True
 
-    @property
-    def status(self) -> str | None:
-        return self.currentAdvertisement.status if self.currentAdvertisement != None else None
+    def status(self, current_time: int) -> str | None:
+        if self.currentAdvertisement == None: 
+            return None
+        text = self.currentAdvertisement.status
+        time_remaining = self.timeStartedAdvertisment + self.currentAdvertisement.duration - current_time
+        status = f"{text} ({time_remaining} left)"
+        return status
 
     def reorderMotives(self) -> None:
         self.motives = {k: v for k, v in sorted(self.motives.items(), key=lambda item: item[1].value)}
@@ -44,11 +56,6 @@ class character:
         # fulfilling motive
         action = self.currentAdvertisement
         increment = action.fulfills / action.duration * tickSpeed
-        print(f"{action.motive}+{increment}")
+        print(f"{self.name}: {action.motive}+{increment} = {self.motives[action.motive].percentage}")
         self.motives[action.motive].increaseValueBy(increment)
         #print(f"{self.motives['hunger'].value} : {self.motives['bladder'].value}")
-        # ending action if it's time is up
-        durationOfPerformance = ticksPassed - self.timeStartedAdvertisment
-        if  durationOfPerformance >= self.currentAdvertisement.duration:
-            self.currentAdvertisement = None
-            self.timeStartedAdvertisment = None

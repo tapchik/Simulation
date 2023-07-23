@@ -4,8 +4,8 @@ characters:
     sex: male
     motives: 
       #'sleep': {value: 50, regularity: 1.0}
-      'hunger': {regularity: 3.0}
-      #'entertainment': {regularity: 2.5}
+      'hunger': {regularity: 2.0}
+      'entertainment': {regularity: 2.5}
       #'hygiene': {regularity: 0.8}
       'bladder': {regularity: 2.0}
       #'social': {regularity: 1.5}
@@ -14,21 +14,21 @@ characters:
     name: Андрей
     sex: male
     motives: 
-      'sleep': {regularity: 1.0}
-      'hunger': {regularity: 3.0}
+      #'sleep': {regularity: 1.0}
+      'hunger': {regularity: 2.0}
       'entertainment': {regularity: 2.5}
-      'hygiene': {regularity: 0.8}
+      #'hygiene': {regularity: 0.8}
       'bladder': {regularity: 3.0}
-      'social': {regularity: 1.5}
-      'bicycle': {regularity: 0.6}
+      #'social': {regularity: 1.5}
+      #'bicycle': {regularity: 0.6}
   senya:
     name: Ксюша
     sex: female
     motives: 
-      'sleep': {regularity: 1.0}
-      'hunger': {regularity: 3.0}
+      #'sleep': {regularity: 1.0}
+      'hunger': {regularity: 2.0}
       'entertainment': {regularity: 2.5}
-      'hygiene': {regularity: 0.8}
+      #'hygiene': {regularity: 0.8}
       'bladder': {regularity: 3.0}
-      'social': {regularity: 1.5}
-      'tidy': {regularity: 0.6} 
+      #'social': {regularity: 1.5}
+      #'tidy': {regularity: 0.6} 
