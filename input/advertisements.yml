@@ -35,6 +35,29 @@ advertisements:
     }
 
 
+  # FULFILLING HYGIENE
+  'ad_hygiene_brash_teeth_001':
+    {
+      action: Почистить зубы, status: Чистит зубы, 
+      motive: hygiene, fulfills: 30, duration: 8, 
+      message_start: "{name} решил почистить зубы", 
+      message_end: "{name} почистил зубы"
+    }
+  'ad_hygiene_shower_001':
+    {
+      action: Принять душ, status: Принимает душ, 
+      motive: hygiene, fulfills: 100, duration: 20, 
+      message_start: "{name} моется в душе", 
+      message_end: "{name} помылся"
+    }
+  'ad_hygiene_bath_001':
+    {
+      action: Принять ванну, status: Купается в ванне, 
+      motive: hygiene, fulfills: 100, duration: 35, 
+      message_start: "{name} купается в ванне с уточками", 
+      message_end: "{name} помылся"
+    }
+
   # FULFILLING ENTERTAINMENT
   'ad_entertainment_youtube_memes_001':
     {

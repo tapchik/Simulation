@@ -46,5 +46,5 @@ class simulation:
         character = self.characters[character_id]
         motives: dict[str, int] = {}
         for key, mot in character.motives.items(): 
-            motives[key] = mot.percentage
+            motives[mot.title] = mot.percentage
         return motives

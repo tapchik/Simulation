@@ -9,12 +9,12 @@ def _assemble_character(input: dict) -> sim.character:
     name = input['name']
     sex = input['sex']
     motives = {}
-    for title, item in input['motives'].items():
-        title = title
-        value = item['value'] if 'value' in item else 70
+    for key, item in input['motives'].items():
+        title = item['title'] if 'title' in item else key
+        value = item['value'] if 'value' in item else 40
         regularity = item['regularity'] if 'regularity' in item else 1.0
         motive = sim.motive(title, value, regularity)
-        motives[title] = motive
+        motives[key] = motive
     char = sim.character(name, sex, motives)
     return char
 

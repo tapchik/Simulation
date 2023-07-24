@@ -35,7 +35,7 @@ class character:
         return status
 
     def reorderMotives(self) -> None:
-        self.motives = {k: v for k, v in sorted(self.motives.items(), key=lambda item: item[1].value)}
+        self.motives = {k: v for k, v in sorted(self.motives.items(), key=lambda item: item[1].value, reverse=True)}
 
     def decayAllMotives(self, tickes_passed: int) -> None:
         immune = self.currentAdvertisement.motive.title if self.currentAdvertisement != None else None
@@ -47,7 +47,7 @@ class character:
         # choose three most important motives
         potential_motives = list(self.motives.keys())[0:3]
         # remove options with more than 10 points
-        potential_motives = list(filter(lambda mot: self.motives[mot].value < 50, potential_motives))
+        potential_motives = list(filter(lambda mot: self.motives[mot].value > 50, potential_motives))
         chosen_motive = choice(potential_motives) if potential_motives != [] else None
         return chosen_motive
     
@@ -59,5 +59,5 @@ class character:
         action = self.currentAdvertisement
         increment = action.fulfills / action.duration * tickSpeed
         print(f"{self.name}: {action.motive}+{increment} = {self.motives[action.motive].percentage}")
-        self.motives[action.motive].increaseValueBy(increment)
+        self.motives[action.motive].fulfill(increment)
         #print(f"{self.motives['hunger'].value} : {self.motives['bladder'].value}")
