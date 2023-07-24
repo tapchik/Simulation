@@ -5,17 +5,20 @@ class motive:
     title: str
     value: float # value in the moment
     regularity: float # average times per day
-    def decay(self, ticks_passed: int):
-        reduction = self.regularity * ticks_passed
-        if self.value - reduction > 0:
-            self.value -= reduction
-        else:
-            self.value = 0
+
     @property
     def percentage(self):
         return int(self.value)
-    def increaseValueBy(self, increase: int) -> None:
-        if self.value + increase <= 100:
+    
+    def decay(self, times: int):
+        increase = self.regularity * times / 5
+        if self.value + increase < 100:
             self.value += increase
         else:
             self.value = 100
+
+    def fulfill(self, decrease: int) -> None:
+        if self.value - decrease > 0:
+            self.value -= decrease
+        else:
+            self.value = 0

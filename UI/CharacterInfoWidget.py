@@ -8,6 +8,7 @@ from simulation import character
 from simulation import motive
 
 from UI.MotiveGroupWithBar import MotiveGroupWithBar
+from UI.MotivePill import MotivePill
 
 #from ui import Ui_MainWindow
 Ui_CharacterInfo, baseClass = uic.loadUiType('UI/CharacterInfoWidget.ui')
@@ -35,9 +36,8 @@ class CharacterInfoWidget(baseClass, Ui_CharacterInfo):
 			layout.itemAt(i).widget().setParent(None)
 		# drawing
 		for title, value in motives.items():
-			mot_groupBox = MotiveGroupWithBar(title, value)
+			mot_groupBox = MotivePill(title, value) #MotiveGroupWithBar(title, value)
 			layout.addWidget(mot_groupBox)
-		
 		#self.show()
 
 if __name__=='__main__':
