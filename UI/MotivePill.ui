@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>211</width>
-    <height>175</height>
+    <width>105</width>
+    <height>42</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -45,8 +45,8 @@
      </property>
      <property name="styleSheet">
       <string notr="true">border-radius: 12px;
-border: 2px solid orange;
-background-color: rgb(255, 180, 140);</string>
+border: 2px solid rgb(255, 85, 127);
+background-color: rgb(160, 239, 166);</string>
      </property>
      <property name="text">
       <string>  Развлечения  </string>
