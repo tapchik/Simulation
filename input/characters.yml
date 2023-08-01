@@ -3,8 +3,8 @@ characters:
     name: Максим
     sex: male
     motives: 
-      #'sleep': {value: 50, regularity: 1.0}
-      'hunger': {regularity: 2.0}
+      'sleep': {value: 60, regularity: 1.0}
+      'hunger': {value: 60, regularity: 2.0}
       'entertainment': {regularity: 2.5}
       'hygiene': {regularity: 0.8}
       'bladder': {regularity: 2.0}

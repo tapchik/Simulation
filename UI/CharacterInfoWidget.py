@@ -29,14 +29,15 @@ class CharacterInfoWidget(baseClass, Ui_CharacterInfo):
 		else:
 			statusLabel.setText("Курит")
 
-	def DrawMotiveValues(self, motives: dict[str, int]):
+	def DrawMotiveValues(self, motives: dict[str, int], highlighted: str | None = None):
 		layout = self.ScrollMotivesLayout.layout()
 		# deleting old
 		for i in reversed(range(layout.count())):
 			layout.itemAt(i).widget().setParent(None)
 		# drawing
-		for title, value in motives.items():
-			mot_groupBox = MotivePill(title, value) #MotiveGroupWithBar(title, value)
+		for key, value in motives.items():
+			highlight = True if key == highlighted else False
+			mot_groupBox = MotivePill(key, value, highlight) #MotiveGroupWithBar(title, value)
 			layout.addWidget(mot_groupBox)
 		#self.show()
 
