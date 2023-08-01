@@ -13,6 +13,7 @@ class simulation:
 
     @property
     def ticksPassed(self) -> int:
+        """Number of ticks passed since start of the simulation. """
         return self._ticks
 
     @property
@@ -21,7 +22,7 @@ class simulation:
         current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
         return current_time.strftime("%H:%M")
     
-    def ticksAdd(self, ticks: int) -> None: 
+    def progress(self, ticks: int) -> None: 
         """Moves time forward, increasing tickes and decreasing all characters' motive fulfillment
 
         ticks : int

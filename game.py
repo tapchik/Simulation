@@ -35,15 +35,27 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 		self.timer=qtc.QTimer()
 		self.timer.timeout.connect(self.TickTicked)
-		self.timer.start(1000)
 		
 		self.SpeedSlider.valueChanged.connect(self.SpeedSliderMoved)
 
 		self.show()
 
 	def SpeedSliderMoved(self, new_value: int) -> None:
+		old_value = self.tickSpeed
+		# update interface
 		self.tickSpeed = new_value
 		self.SpeedLabel.setText(f"Speed: {self.tickSpeed}")
+		
+		if old_value != 0 and new_value == 0: 
+			#self.TickTicked()
+			self.timer.stop()
+		self.resetTimer()
+		self.RedrawControlInfo()
+
+	def resetTimer(self): 
+		if self.tickSpeed != 0:
+			msec = int(1000 / self.tickSpeed)
+			self.timer.start(msec)
 
 	def RedrawCharacterInfoWidgets(self):
 		"""Redraws status and motives of characters in the interface. """
@@ -52,15 +64,12 @@ class MainWindow(baseClass, Ui_MainWindow):
 			motives = self.simulation.retrieveCharacterMotives(char_id)
 			self.characterInfoWidgets[char_id].DrawStatus(status)
 			self.characterInfoWidgets[char_id].DrawMotiveValues(motives)
+	
+	def RedrawControlInfo(self):
+		self.TimeLabel.setText(self.simulation.currentTime)
+		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
 
 	def TickTicked(self):
-			
-		# don't do anything if speed is zero
-		if self.tickSpeed == 0:
-			return
-
-		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
-		self.timer.start(1000)
 		
 		for character in self.simulation.characters.values(): 
 			# do your thing
@@ -80,16 +89,15 @@ class MainWindow(baseClass, Ui_MainWindow):
 			self.listOfMessagesWidget.insertItem(0, item)
 
 		# time passes
-		self.simulation.ticksAdd(self.tickSpeed)
+		self.simulation.progress(1)
 		
 		# redrawing interface
 		self.RedrawCharacterInfoWidgets()
-		self.TimeLabel.setText(self.simulation.currentTime)
-
+		self.RedrawControlInfo()
 
 if __name__=='__main__':
 
-	characters = read_characters.read_characters('input/characters.yml')
+	characters = read_characters.read_characters('input/characters.yml', 'translation/russian.yml')
 	advertisements = read_advertisements.read_advertisements('input/advertisements.yml')
 	simulation = sim.simulation(characters=characters, advertisements=advertisements)
 

@@ -4,10 +4,10 @@ characters:
     sex: male
     motives: 
       #'sleep': {value: 50, regularity: 1.0}
-      'hunger': {title: Голод, regularity: 2.0}
-      'entertainment': {title: Развлечения, regularity: 2.5}
-      'hygiene': {title: Гигиена, regularity: 0.8}
-      'bladder': {title: Туалет, regularity: 2.0}
+      'hunger': {regularity: 2.0}
+      'entertainment': {regularity: 2.5}
+      'hygiene': {regularity: 0.8}
+      'bladder': {regularity: 2.0}
       #'social': {regularity: 1.5}
       #'masturbate': {regularity: 1.0}
   andrew:
@@ -15,21 +15,21 @@ characters:
     sex: male
     motives: 
       #'sleep': {regularity: 1.0}
-      'hunger': {title: Голод, regularity: 2.0}
+      'hunger': {regularity: 2.0}
       'entertainment': {regularity: 2.5}
-      'hygiene': {title: Гигиена, value: 0, regularity: 0.8}
-      'bladder': {title: Туалет, regularity: 3.0}
+      'hygiene': {value: 0, regularity: 0.8}
+      'bladder': {regularity: 3.0}
       #'social': {regularity: 1.5}
       #'bicycle': {regularity: 0.6}
-      'tinkering': {title: Руки чешутся, regularity: 1.0}
+      'tinkering': {regularity: 1.0}
   senya:
     name: Ксюша
     sex: female
     motives: 
       #'sleep': {regularity: 1.0}
-      'hunger': {title: Голод, regularity: 2.0}
-      'entertainment': {title: Отдых, regularity: 2.5}
-      'hygiene': {title: Гигиена, regularity: 0.8}
-      'bladder': {title: Дамская комната, regularity: 3.0}
+      'hunger': {regularity: 2.0}
+      'entertainment': {regularity: 2.5}
+      'hygiene': {regularity: 0.8}
+      'bladder': {regularity: 3.0}
       #'social': {regularity: 1.5}
       #'tidy': {regularity: 0.6} 
