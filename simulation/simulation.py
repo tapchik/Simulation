@@ -10,6 +10,7 @@ class simulation:
     advertisements: dict[str, sim.advertisement] = field(default_factory=dict)
     _ticks: int = 0
     DATETIME_START = datetime.datetime(2023, 7, 15, hour=12, minute=00)
+    translate: sim.translate = None
 
     @property
     def ticksPassed(self) -> int:
@@ -49,3 +50,10 @@ class simulation:
         for key, mot in character.motives.items(): 
             motives[mot.title] = mot.percentage
         return motives
+    
+    def retrieveCharacterActiveMotive(self, character_id: str) -> str | None: 
+        character = self.characters[character_id]
+        if character.currentAdvertisement == None: 
+            return None
+        active_motive = character.currentAdvertisement.motive
+        return active_motive

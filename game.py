@@ -63,7 +63,9 @@ class MainWindow(baseClass, Ui_MainWindow):
 			status = self.simulation.retrieveCharacterStatus(char_id)
 			motives = self.simulation.retrieveCharacterMotives(char_id)
 			self.characterInfoWidgets[char_id].DrawStatus(status)
-			self.characterInfoWidgets[char_id].DrawMotiveValues(motives)
+			active_motive = self.simulation.retrieveCharacterActiveMotive(char_id)
+			highlighted = self.simulation.translate[active_motive]
+			self.characterInfoWidgets[char_id].DrawMotiveValues(motives, highlighted)
 	
 	def RedrawControlInfo(self):
 		self.TimeLabel.setText(self.simulation.currentTime)
@@ -99,7 +101,8 @@ if __name__=='__main__':
 
 	characters = read_characters.read_characters('input/characters.yml', 'translation/russian.yml')
 	advertisements = read_advertisements.read_advertisements('input/advertisements.yml')
-	simulation = sim.simulation(characters=characters, advertisements=advertisements)
+	translate = sim.translate('translation/russian.yml')
+	simulation = sim.simulation(characters=characters, advertisements=advertisements, translate=translate)
 
 	app = qtw.QApplication(sys.argv)
 	w = MainWindow(simulation)
