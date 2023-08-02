@@ -1,5 +1,14 @@
 advertisements: 
 
+  # FULFILLING SLEEP
+  'ad_sleep_nap_001':
+    {
+      action: Вздремнуть, status: Дремает, 
+      motive: sleep, fulfills: 20, duration: 40,
+      message_start: "{name} решил вздремнуть",
+      message_end: "{name} проспался"
+    }
+
 
   # FULFILLING BLADDER
   'ad_pee_001': 
@@ -29,9 +38,16 @@ advertisements:
   'ad_hunger_snack_001':
     {
       action: Перекусить, status: Перекусывает, 
-      motive: hunger, fulfills: 100, duration: 15, 
+      motive: hunger, fulfills: 80, duration: 15, 
       message_start: "{name} точет зубок", 
       message_end: "{name} перекусил"
+    }
+  'ad_hunger_tea_001':
+    {
+      action: Попить чаю, status: Пьёт чай (с печеньками),
+      motive: hunger, fulfills: 80, duration: 15,
+      message_start: "{name} садится пить чай с печеньками",
+      message_end: "{name} попил чайку с печеньками"
     }
 
 
@@ -81,4 +97,13 @@ advertisements:
       motive: tinkering, fulfills: 80, duration: 15, 
       message_start: "{name} точит ножи",
       message_end: "{name} закончил точить ножи"
+    }
+
+  # FULFILLING BICYCLE
+  'ad_bicycle_repair_001':
+    {
+      action: Возиться с велосипедом, status: Возится с велосипедом,
+      motive: bicycle, fulfills: 40, duration: 25, 
+      message_start: "{name} возится с велосипелом",
+      message_end: "{name} починил чо-то у велосипеда"
     }

@@ -25,6 +25,12 @@ class character:
             return False
         else:
             return True
+    
+    @property
+    def currentlyFulfillingMotive(self) -> str | None: 
+        if self.currentAdvertisement == None: 
+            return None
+        return self.currentAdvertisement.motive
 
     def status(self, current_time: int) -> str | None:
         if self.currentAdvertisement == None: 

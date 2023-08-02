@@ -20,7 +20,7 @@ characters:
       'hygiene': {value: 0, regularity: 0.8}
       'bladder': {regularity: 3.0}
       #'social': {regularity: 1.5}
-      #'bicycle': {regularity: 0.6}
+      'bicycle': {value: 68, regularity: 1.0}
       'tinkering': {regularity: 1.0}
   senya:
     name: Ксюша

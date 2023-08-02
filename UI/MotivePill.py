@@ -19,10 +19,10 @@ class MotivePill(baseClass, Ui_MotivePill):
         self.MotiveLabel.setText(title)
         backgroundColor = self._ShiftColors(self.GREEN_BACKGROUND, self.RED_BACKGROUND, value/100)
         if highlighted == True:
-            borderColor = "rgb(250, 231, 23)"
+            borderStyle = f"3px solid rgb(54, 101, 211)"
         else:
-            borderColor = self._ShiftColors(self.GREEN_BORDER, self.RED_BORDER, value/100)
-        self.MotiveLabel.setStyleSheet(f"border-radius: 12px; border: 2px solid {borderColor}; background-color: {backgroundColor}")
+            borderStyle = f"2px solid {self._ShiftColors(self.GREEN_BORDER, self.RED_BORDER, value/100)}"
+        self.MotiveLabel.setStyleSheet(f"border-radius: 12px; border: {borderStyle}; background-color: {backgroundColor}")
         #self.show()
 
     def _ShiftColors(self, color1: tuple, color2: tuple, shift: float) -> str: 

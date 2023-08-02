@@ -44,13 +44,6 @@ class simulation:
         character = self.characters[character_id]
         return character.status(self.ticksPassed)
     
-    def retrieveCharacterMotives(self, character_id: str) -> dict[str, int]:
-        character = self.characters[character_id]
-        motives: dict[str, int] = {}
-        for key, mot in character.motives.items(): 
-            motives[mot.title] = mot.percentage
-        return motives
-    
     def retrieveCharacterActiveMotive(self, character_id: str) -> str | None: 
         character = self.characters[character_id]
         if character.currentAdvertisement == None: 

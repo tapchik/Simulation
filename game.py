@@ -24,7 +24,7 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 		self.characterInfoWidgets: dict[str, CharacterInfoWidget] = {}
 		for char_id, char in self.simulation.characters.items(): 
-			widget = CharacterInfoWidget(char.name, self.simulation.retrieveCharacterStatus(char_id), self.simulation.retrieveCharacterMotives(char_id)) 
+			widget = CharacterInfoWidget(char.name, self.simulation.retrieveCharacterStatus(char_id), self.simulation.characters[char_id].motives)
 			self.characterInfoWidgets[char_id] = widget
 		
 		layout = self.groupBox_3.layout()
@@ -60,12 +60,10 @@ class MainWindow(baseClass, Ui_MainWindow):
 	def RedrawCharacterInfoWidgets(self):
 		"""Redraws status and motives of characters in the interface. """
 		for char_id in self.simulation.characters.keys():
+			character = self.simulation.characters[char_id]
 			status = self.simulation.retrieveCharacterStatus(char_id)
-			motives = self.simulation.retrieveCharacterMotives(char_id)
 			self.characterInfoWidgets[char_id].DrawStatus(status)
-			active_motive = self.simulation.retrieveCharacterActiveMotive(char_id)
-			highlighted = self.simulation.translate[active_motive]
-			self.characterInfoWidgets[char_id].DrawMotiveValues(motives, highlighted)
+			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives, character.currentlyFulfillingMotive)
 	
 	def RedrawControlInfo(self):
 		self.TimeLabel.setText(self.simulation.currentTime)
