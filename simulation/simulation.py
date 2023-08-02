@@ -10,9 +10,11 @@ class simulation:
     advertisements: dict[str, sim.advertisement] = field(default_factory=dict)
     _ticks: int = 0
     DATETIME_START = datetime.datetime(2023, 7, 15, hour=12, minute=00)
+    translate: sim.translate = None
 
     @property
     def ticksPassed(self) -> int:
+        """Number of ticks passed since start of the simulation. """
         return self._ticks
 
     @property
@@ -21,7 +23,7 @@ class simulation:
         current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
         return current_time.strftime("%H:%M")
     
-    def ticksAdd(self, ticks: int) -> None: 
+    def progress(self, ticks: int) -> None: 
         """Moves time forward, increasing tickes and decreasing all characters' motive fulfillment
 
         ticks : int
@@ -42,9 +44,9 @@ class simulation:
         character = self.characters[character_id]
         return character.status(self.ticksPassed)
     
-    def retrieveCharacterMotives(self, character_id: str) -> dict[str, int]:
+    def retrieveCharacterActiveMotive(self, character_id: str) -> str | None: 
         character = self.characters[character_id]
-        motives: dict[str, int] = {}
-        for key, mot in character.motives.items(): 
-            motives[mot.title] = mot.percentage
-        return motives
+        if character.currentAdvertisement == None: 
+            return None
+        active_motive = character.currentAdvertisement.motive
+        return active_motive

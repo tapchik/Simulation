@@ -19,7 +19,7 @@ class SimpleTest(unittest.TestCase):
     # Returns True or False. 
     def testDecayingMotives(self):        
         char = self.simulation.characters['alex']
-        self.simulation.ticksAdd(10)
+        self.simulation.progress(10)
         self.assertEqual(char.motives['bladder'].value, 20)
 
 class HardTet(unittest.TestCase):

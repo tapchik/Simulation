@@ -12,14 +12,17 @@ class MotivePill(baseClass, Ui_MotivePill):
     RED_BACKGROUND = (233, 107, 107)
     GREEN_BORDER = (142, 219, 148)
     RED_BORDER = (205, 98, 98)
-    def __init__(self, title: str, value: int, *args, **kwargs):
+    def __init__(self, title: str, value: int, highlighted: bool, *args, **kwargs):
         """0 <= value <= 100"""
         super().__init__(*args, **kwargs)
         self.setupUi(self)
         self.MotiveLabel.setText(title)
         backgroundColor = self._ShiftColors(self.GREEN_BACKGROUND, self.RED_BACKGROUND, value/100)
-        borderColor = self._ShiftColors(self.GREEN_BORDER, self.RED_BORDER, value/100)
-        self.MotiveLabel.setStyleSheet(f"border-radius: 12px; border: 2px solid {borderColor}; background-color: {backgroundColor}")
+        if highlighted == True:
+            borderStyle = f"3px solid rgb(54, 101, 211)"
+        else:
+            borderStyle = f"2px solid {self._ShiftColors(self.GREEN_BORDER, self.RED_BORDER, value/100)}"
+        self.MotiveLabel.setStyleSheet(f"border-radius: 12px; border: {borderStyle}; background-color: {backgroundColor}")
         #self.show()
 
     def _ShiftColors(self, color1: tuple, color2: tuple, shift: float) -> str: 
