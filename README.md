@@ -31,9 +31,9 @@
 
 - [x] character.motives is a dictionary(key, motive) which allows to introduce unique key and friendly title
 - [x] Performing an action takes time
+- [x] Interface shows how long till action ends
 - [X] Tick speed change revamp
 - [X] Active motive highlights and goes first
 - [x] Active actions are stored in a separed dictionary
 - [ ] Actions require resources (e.g. number of toilets, beds or computers available)
 - [ ] Tasks for guys
-- [ ] Interface shows how long till action ends
