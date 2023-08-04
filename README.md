@@ -33,7 +33,7 @@
 - [x] Performing an action takes time
 - [X] Tick speed change revamp
 - [X] Active motive highlights and goes first
+- [x] Active actions are stored in a separed dictionary
 - [ ] Actions require resources (e.g. number of toilets, beds or computers available)
 - [ ] Tasks for guys
-- [ ] Chosen activities stored in separate entity
 - [ ] Interface shows how long till action ends

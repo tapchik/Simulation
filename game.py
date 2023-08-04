@@ -21,6 +21,7 @@ class MainWindow(baseClass, Ui_MainWindow):
 		self.tickSpeed: int = 0
 
 		self.setupUi(self)
+		self.setWindowTitle("Simulation")
 
 		self.characterInfoWidgets: dict[str, CharacterInfoWidget] = {}
 		for char_id, char in self.simulation.characters.items(): 
@@ -63,7 +64,8 @@ class MainWindow(baseClass, Ui_MainWindow):
 			character = self.simulation.characters[char_id]
 			status = self.simulation.retrieveCharacterStatus(char_id)
 			self.characterInfoWidgets[char_id].DrawStatus(status)
-			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives, character.currentlyFulfillingMotive)
+			currentlyFulfillingMotive = self.simulation.currentlyFulfillingMotive(char_id)
+			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives, currentlyFulfillingMotive)
 	
 	def RedrawControlInfo(self):
 		self.TimeLabel.setText(self.simulation.currentTime)
@@ -71,25 +73,29 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 	def TickTicked(self):
 		
-		for character in self.simulation.characters.values(): 
-			# do your thing
-			character.ActUponAdvertisement(self.simulation.ticksPassed, self.tickSpeed)
-			# skipping character if his busy
-			if character.isPerformingAction(self.simulation.ticksPassed): 
+		for char_id, character in self.simulation.characters.items(): 
+			
+			self.simulation.stopActionIfFinished(char_id)
+			
+			if self.simulation.actions[char_id] != None: 
+				self.simulation.actUponAction(char_id)
 				continue
 			# choosing a motive to fulfill and an action
 			motive_to_fulfill = character.chooseMotiveToFulfill()
-			action = self.simulation.chooseAdvertismentToFulfillMotive(motive_to_fulfill)
-			if action == None: 
+			ad = self.simulation.chooseAdvertismentToFulfillMotive(motive_to_fulfill)
+			if ad == None: 
 				continue
-			character.currentAdvertisement = action
-			character.timeStartedAdvertisment = self.simulation.ticksPassed
+			action = sim.action(ad, character, self.simulation.ticks)
+			self.simulation.actions[char_id] = action
 			# writing a console message
-			item = qtw.QListWidgetItem(f"{self.simulation.currentTime}: {action.message_start}".format(name=character.name))
+			item = qtw.QListWidgetItem(f"{self.simulation.currentTime}: {ad.message_start}".format(name=character.name))
 			self.listOfMessagesWidget.insertItem(0, item)
+			# second call, just in case
+			self.simulation.stopActionIfFinished(char_id)
 
 		# time passes
 		self.simulation.progress(1)
+
 		
 		# redrawing interface
 		self.RedrawCharacterInfoWidgets()

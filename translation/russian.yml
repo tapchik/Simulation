@@ -1,4 +1,6 @@
 translation: 
+  #OTHER
+  state/idle: Курит
   # MOTIVES
   sleep: Сон
   hunger: Голод

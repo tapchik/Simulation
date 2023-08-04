@@ -50,5 +50,5 @@ class CharacterInfoWidget(baseClass, Ui_CharacterInfo):
 
 if __name__=='__main__':
 	app = qtw.QApplication(sys.argv)
-	w = CharacterInfoWidget()
+	w = CharacterInfoWidget() # type: ignore
 	sys.exit(app.exec_())
