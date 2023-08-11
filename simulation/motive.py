@@ -17,7 +17,7 @@ class motive:
         else:
             self.value = 100
 
-    def fulfill(self, decrease: int) -> None:
+    def fulfill(self, decrease: float) -> None:
         if self.value - decrease > 0:
             self.value -= decrease
         else:

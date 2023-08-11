@@ -69,7 +69,7 @@ class simulation:
         ad = action.advertisement
         character = self.characters[char_id]
         # fulfilling motive
-        increment = int( ad.fulfills / ad.duration * 1)
+        increment = ad.fulfills / ad.duration * 1
         character.motives[ad.motive].fulfill(increment)
     
     def retrieveCharacterStatus(self, char_id: str) -> str:

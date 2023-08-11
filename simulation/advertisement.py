@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 @dataclass
-class advertisement:
+class advertisement(dict):
+    id: str
     action: str
     motive: str
     status: str

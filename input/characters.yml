@@ -14,7 +14,7 @@ characters:
     name: Андрей
     sex: male
     motives: 
-      #'sleep': {regularity: 1.0}
+      'sleep': {value: 80, regularity: 1.0}
       'hunger': {regularity: 2.0}
       'entertainment': {regularity: 2.5}
       'hygiene': {value: 0, regularity: 0.8}
@@ -30,6 +30,6 @@ characters:
       'hunger': {regularity: 2.0}
       'entertainment': {regularity: 2.5}
       'hygiene': {regularity: 0.8}
-      'bladder': {regularity: 3.0}
+      'bladder': {value: 60, regularity: 3.0}
       #'social': {regularity: 1.5}
       #'tidy': {regularity: 0.6} 

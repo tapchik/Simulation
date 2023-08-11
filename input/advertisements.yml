@@ -1,37 +1,51 @@
 advertisements: 
 
   # FULFILLING SLEEP
-  'ad_sleep_nap_001':
-    {
-      action: Вздремнуть, status: Дремает, 
-      motive: sleep, fulfills: 20, duration: 40,
-      message_start: "{name} решил вздремнуть",
-      message_end: "{name} проспался"
+  'ad_sleep_nap_001': {
+    action: Вздремнуть, status: Дремает, 
+    motive: sleep, fulfills: 40, duration: 30,
+    message_start: "{name} решил вздремнуть",
+    message_end: "{name} проспался", 
+    started: {
+      message: "{name} решил вздремнуть",
+      sound: {
+        'anyone': 'sleep_snore_mimimi.mp3'
+      }
     }
+  }
 
 
   # FULFILLING BLADDER
-  'ad_pee_001': 
-    {
-      action: Поссать, status: Ссыт, 
-      motive: bladder, fulfills: 70, duration: 10, 
-      message_start: "{name} бежит ссать", 
-      message_end: "{name} пописил"
+  'ad_pee_001': {
+    action: Поссать, status: Ссыт, 
+    motive: bladder, fulfills: 70, duration: 10, 
+    message_start: "{name} бежит ссать", 
+    message_end: "{name} пописил", 
+    finished: {
+      message: '{name} пописил(-а)',
+      sound: {
+        'senya': 'senya_pissed_01.ogg' 
+      }
     }
-  'ad_bladder_poop_fast':
-    {
-      action: Посрать, status: Срёт,
-      motive: bladder, fulfills: 100, duration: 20, 
-      message_start: "{name} бежит срать", 
-      message_end: "{name} высрал всю душу", 
+  }
+  'ad_bladder_poop_fast': {
+    action: Посрать, status: Срёт,
+    motive: bladder, fulfills: 100, duration: 20, 
+    message_start: "{name} бежит срать", 
+    message_end: "{name} высрал всю душу", 
+    started: {
+      message: "{name} высрал всю душу",
+      sound: {
+        'anyone': 'fart-with-reverb-01.mp3'
+      }
     }
-  'ad_bladder_poop_long': 
-    {
-      action: Посрать, status: Срёт, 
-      motive: bladder, fulfills: 100, duration: 30, 
-      message_start: "{name} бежит срать",
-      message_end: "{name} срал целых полчаса! Медаль за отвагу..."
-    }
+  }
+  #'ad_bladder_poop_long': {
+  #  action: Посрать, status: Срёт, 
+  #  motive: bladder, fulfills: 100, duration: 30, 
+  #  message_start: "{name} бежит срать",
+  #  message_end: "{name} срал целых полчаса! Медаль за отвагу..."
+  #}
 
 
   # FULFILLING HUNGER
@@ -40,7 +54,11 @@ advertisements:
       action: Перекусить, status: Перекусывает, 
       motive: hunger, fulfills: 80, duration: 15, 
       message_start: "{name} точет зубок", 
-      message_end: "{name} перекусил"
+      message_end: "{name} перекусил", 
+      started: {
+        message: {"{name} точит зубок"},
+        sound: {'anyone': 'eating-in-minecraft-01.mp3'}
+      }
     }
   'ad_hunger_tea_001':
     {

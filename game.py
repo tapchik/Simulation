@@ -1,6 +1,8 @@
+import os
 import sys
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
+from PyQt5 import QtMultimedia
 import PyQt5.QtGui as qtg
 import PyQt5.uic as uic
 
@@ -18,7 +20,11 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 		self.simulation: sim.simulation = simulation
 		self.characters_ids: list[str] = list(self.simulation.characters.keys()) # not used yet
+		self.mixers: dict[str, QtMultimedia.QMediaPlayer] = {char_id: QtMultimedia.QMediaPlayer() for char_id in self.simulation.characters.keys()}
 		self.tickSpeed: int = 0
+
+		self.player = QtMultimedia.QMediaPlayer()
+		self.CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 		self.setupUi(self)
 		self.setWindowTitle("Simulation")
@@ -89,6 +95,7 @@ class MainWindow(baseClass, Ui_MainWindow):
 			self.simulation.actions[char_id] = action
 			# writing a console message
 			item = qtw.QListWidgetItem(f"{self.simulation.currentTime}: {ad.message_start}".format(name=character.name))
+			self.PlaySound(ad.id, "started", char_id)
 			self.listOfMessagesWidget.insertItem(0, item)
 			# second call, just in case
 			self.simulation.stopActionIfFinished(char_id)
@@ -100,6 +107,23 @@ class MainWindow(baseClass, Ui_MainWindow):
 		# redrawing interface
 		self.RedrawCharacterInfoWidgets()
 		self.RedrawControlInfo()
+	
+	def PlaySound(self, ad_id: str, state: str, char_id: str) -> None: 
+		"""Plays sound if available. """
+		if ad_id not in self.simulation.advertisements:
+			return
+		if char_id in self.simulation.advertisements[ad_id][state]['sound']:
+			filename = self.simulation.advertisements[ad_id][state]['sound'][char_id]
+		else:
+			filename = self.simulation.advertisements[ad_id][state]['sound']['anyone']
+		print(self.simulation.advertisements[ad_id]['started'])
+		if filename == None: 
+			return
+		filepath = self.CURRENT_DIR + '/src/sounds/' + filename
+		print(f"playing: {filepath}")
+		url = qtc.QUrl.fromLocalFile(filepath)
+		self.mixers[char_id].setMedia(QtMultimedia.QMediaContent(url))
+		self.mixers[char_id].play()
 
 if __name__=='__main__':
 
