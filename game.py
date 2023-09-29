@@ -82,7 +82,6 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 		# time passes
 		self.simulation.progress(1)
-
 		
 		# redrawing interface
 		self.RedrawCharacterInfoWidgets()

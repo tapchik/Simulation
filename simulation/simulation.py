@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 import simulation as sim
-from repositories.advertismentRepository import advertismentRepository
-from repositories.actionRepository import actionRepository
+from repositories import characterRepository, advertismentRepository, actionRepository
 import datetime
 
 from random import choice
@@ -10,7 +9,7 @@ from random import choice
 class simulation:
     translate: sim.translate
     characters: dict[str, sim.character] = field(default_factory=dict)
-    actions: dict[str, sim.action | None] = field(default_factory=dict)
+    characterRepository = characterRepository()
     actionRepository = actionRepository()
     advertisementRepository = advertismentRepository()
     ticks: int = 0
@@ -22,7 +21,7 @@ class simulation:
         return self.ticks
 
     @property
-    def RetrieveCurrentTime(self):
+    def RetrieveCurrentTime(self) -> str:
         t = self.ticksPassed
         current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
         return current_time.strftime("%H:%M")
@@ -45,15 +44,6 @@ class simulation:
         """New version using repository"""
         self.actionRepository.stopEachFinishedAction(self.ticks)
 
-    def stopActionIfFinished(self, char_id: str) -> None:
-        """Old version, should be deleted"""
-        action = self.actions[char_id]
-        if action == None:
-            return
-        time_passed = self.ticks - action.started
-        if time_passed >= action.advertisement.duration: 
-            self.actions[char_id] = None
-
     def assignActionForEachFreeCharacter(self) -> None: 
         """For each charachter that is not busy - assign a relevant action"""
         free_characters = self.actionRepository.getFreeCharacters()
@@ -65,7 +55,6 @@ class simulation:
             if ad == None: 
                 continue
             action = sim.action(ad, character, self.ticks)
-            self.actions[char_id] = action
             self.actionRepository[char_id] = action
 
     def eachCharacterPerformsAssignedAction(self) -> None:
@@ -78,17 +67,17 @@ class simulation:
         return ad
     
     def currentlyFulfillingMotive(self, char_id: str) -> str | None:
-        if char_id not in self.actions:
-            self.actions[char_id] = None
-        action = self.actions[char_id]
+        if char_id not in self.actionRepository:
+            self.actionRepository[char_id] = None
+        action = self.actionRepository[char_id]
         if action == None:
             return None
         return action.advertisement.motive
     
     def actUponAction(self, char_id: str) -> None:
-        if char_id not in self.actions:
-            self.actions[char_id] = None
-        action = self.actions[char_id]
+        if char_id not in self.actionRepository:
+            self.actionRepository[char_id] = None
+        action = self.actionRepository[char_id]
         if action == None:
             return self.translate['state/idle']
         ad = action.advertisement
