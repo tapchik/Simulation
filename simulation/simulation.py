@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 import simulation as sim
+from repositories.advertismentRepository import advertismentRepository
+from repositories.actionRepository import actionRepository
 import datetime
 
 from random import choice
@@ -8,8 +10,9 @@ from random import choice
 class simulation:
     translate: sim.translate
     characters: dict[str, sim.character] = field(default_factory=dict)
-    advertisements: dict[str, sim.advertisement] = field(default_factory=dict)
     actions: dict[str, sim.action | None] = field(default_factory=dict)
+    actionRepository = actionRepository()
+    advertisementRepository = advertismentRepository()
     ticks: int = 0
     DATETIME_START = datetime.datetime(2023, 7, 15, hour=12, minute=00)
 
@@ -19,7 +22,7 @@ class simulation:
         return self.ticks
 
     @property
-    def currentTime(self):
+    def RetrieveCurrentTime(self):
         t = self.ticksPassed
         current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
         return current_time.strftime("%H:%M")
@@ -38,7 +41,12 @@ class simulation:
             character.decayAllMotives(jump_ticks, [immune])
             character.reorderMotives()
 
+    def stopEachFinishedAction(self) -> None:
+        """New version using repository"""
+        self.actionRepository.stopEachFinishedAction(self.ticks)
+
     def stopActionIfFinished(self, char_id: str) -> None:
+        """Old version, should be deleted"""
         action = self.actions[char_id]
         if action == None:
             return
@@ -46,11 +54,28 @@ class simulation:
         if time_passed >= action.advertisement.duration: 
             self.actions[char_id] = None
 
+    def assignActionForEachFreeCharacter(self) -> None: 
+        """For each charachter that is not busy - assign a relevant action"""
+        free_characters = self.actionRepository.getFreeCharacters()
+        for char_id in free_characters: 
+            character = self.characters[char_id]
+			# choosing a motive to fulfill and an action
+            motive_to_fulfill = character.chooseMotiveToFulfill()
+            ad = self.chooseAdvertismentToFulfillMotive(motive_to_fulfill)
+            if ad == None: 
+                continue
+            action = sim.action(ad, character, self.ticks)
+            self.actions[char_id] = action
+            self.actionRepository[char_id] = action
+
+    def eachCharacterPerformsAssignedAction(self) -> None:
+        busy_characters = self.actionRepository.getBusyCharacters()
+        for char_id in busy_characters:
+            self.actUponAction(char_id)
+
     def chooseAdvertismentToFulfillMotive(self, motive: str | None) -> sim.advertisement | None: 
-        all_ads = self.advertisements.values()
-        options = list(filter(lambda ad: ad.motive==motive, all_ads))
-        action = choice(options) if options != [] else None
-        return action
+        ad = self.advertisementRepository.chooseAdvertismentToFulfillMotive(motive)
+        return ad
     
     def currentlyFulfillingMotive(self, char_id: str) -> str | None:
         if char_id not in self.actions:
@@ -73,12 +98,5 @@ class simulation:
         character.motives[ad.motive].fulfill(increment)
     
     def retrieveCharacterStatus(self, char_id: str) -> str:
-        if char_id not in self.actions:
-            self.actions[char_id] = None
-        action = self.actions[char_id]
-        if action == None:
-            return self.translate['state/idle']
-        text = action.advertisement.status
-        time_remaining = action.started + action.advertisement.duration - self.ticks
-        status = f"{text} ({time_remaining} left)"
+        status = self.actionRepository.retrieveStatus(char_id, self.ticks, self.translate)
         return status

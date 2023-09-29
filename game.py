@@ -5,7 +5,7 @@ import PyQt5.QtGui as qtg
 import PyQt5.uic as uic
 
 import simulation as sim
-from readers import read_characters, read_advertisements
+from readers import read_characters
 
 from UI.CharacterInfoWidget import CharacterInfoWidget
 
@@ -68,30 +68,17 @@ class MainWindow(baseClass, Ui_MainWindow):
 			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives, currentlyFulfillingMotive)
 	
 	def RedrawControlInfo(self):
-		self.TimeLabel.setText(self.simulation.currentTime)
+		self.TimeLabel.setText(self.simulation.RetrieveCurrentTime)
 		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
 
 	def TickTicked(self):
-		
-		for char_id, character in self.simulation.characters.items(): 
-			
-			self.simulation.stopActionIfFinished(char_id)
-			
-			if self.simulation.actions[char_id] != None: 
-				self.simulation.actUponAction(char_id)
-				continue
-			# choosing a motive to fulfill and an action
-			motive_to_fulfill = character.chooseMotiveToFulfill()
-			ad = self.simulation.chooseAdvertismentToFulfillMotive(motive_to_fulfill)
-			if ad == None: 
-				continue
-			action = sim.action(ad, character, self.simulation.ticks)
-			self.simulation.actions[char_id] = action
-			# writing a console message
-			item = qtw.QListWidgetItem(f"{self.simulation.currentTime}: {ad.message_start}".format(name=character.name))
-			self.listOfMessagesWidget.insertItem(0, item)
-			# second call, just in case
-			self.simulation.stopActionIfFinished(char_id)
+
+		self.simulation.stopEachFinishedAction()
+		self.simulation.assignActionForEachFreeCharacter()
+		self.simulation.eachCharacterPerformsAssignedAction()
+		# TODO: find a way to write a message in a console
+		#item = qtw.QListWidgetItem(f"{self.simulation.RetrieveCurrentTime}: {ad.message_start}".format(name=character.name))
+		#self.listOfMessagesWidget.insertItem(0, item)
 
 		# time passes
 		self.simulation.progress(1)
@@ -104,9 +91,10 @@ class MainWindow(baseClass, Ui_MainWindow):
 if __name__=='__main__':
 
 	characters = read_characters.read_characters('input/characters.yml', 'translation/russian.yml')
-	advertisements = read_advertisements.read_advertisements('input/advertisements.yml')
+	
 	translate = sim.translate('translation/russian.yml')
-	simulation = sim.simulation(characters=characters, advertisements=advertisements, translate=translate)
+	simulation = sim.simulation(characters=characters, translate=translate)
+	simulation.advertisementRepository.add_advertisments('input/advertisements.yml')
 
 	app = qtw.QApplication(sys.argv)
 	w = MainWindow(simulation)
