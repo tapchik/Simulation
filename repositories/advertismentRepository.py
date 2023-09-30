@@ -31,5 +31,5 @@ class advertismentRepository(dict[str, sim.advertisement]):
                 advertisement = self._assemble_advertisement(item)
                 self[ad_id] = advertisement
     
-    def add_advertisment(self, ad_id: str, advertisment: sim.advertisement) -> None: 
-        self[ad_id] = advertisment
+    def add_advertisment(self, ad_id: str, advertisement: sim.advertisement) -> None:
+        self[ad_id] = advertisement

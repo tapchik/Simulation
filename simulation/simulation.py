@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import simulation as sim
-from repositories import characterRepository, advertismentRepository, actionRepository
+from repositories import CharacterRepository, advertismentRepository, actionRepository
 import datetime
 
 from random import choice
@@ -8,8 +8,8 @@ from random import choice
 @dataclass
 class simulation:
     translate: sim.translate
-    characters: dict[str, sim.character] = field(default_factory=dict)
-    characterRepository = characterRepository()
+    # characters: dict[str, sim.character] = field(default_factory=dict)
+    characterRepository = CharacterRepository()
     actionRepository = actionRepository()
     advertisementRepository = advertismentRepository()
     ticks: int = 0
@@ -21,7 +21,7 @@ class simulation:
         return self.ticks
 
     @property
-    def RetrieveCurrentTime(self) -> str:
+    def retrieveCurrentTime(self) -> str:
         t = self.ticksPassed
         current_time = self.DATETIME_START + datetime.timedelta(minutes=t)
         return current_time.strftime("%H:%M")
@@ -35,7 +35,7 @@ class simulation:
             specify time passed (measured in ticks)
         """
         self.ticks += jump_ticks
-        for char_id, character in self.characters.items():
+        for char_id, character in self.characterRepository.items():
             immune = self.currentlyFulfillingMotive(char_id)
             character.decayAllMotives(jump_ticks, [immune])
             character.reorderMotives()
@@ -48,7 +48,7 @@ class simulation:
         """For each charachter that is not busy - assign a relevant action"""
         free_characters = self.actionRepository.getFreeCharacters()
         for char_id in free_characters: 
-            character = self.characters[char_id]
+            character = self.characterRepository[char_id]
 			# choosing a motive to fulfill and an action
             motive_to_fulfill = character.chooseMotiveToFulfill()
             ad = self.chooseAdvertismentToFulfillMotive(motive_to_fulfill)
@@ -81,7 +81,7 @@ class simulation:
         if action == None:
             return self.translate['state/idle']
         ad = action.advertisement
-        character = self.characters[char_id]
+        character = self.characterRepository[char_id]
         # fulfilling motive
         increment = int( ad.fulfills / ad.duration * 1)
         character.motives[ad.motive].fulfill(increment)
@@ -89,3 +89,9 @@ class simulation:
     def retrieveCharacterStatus(self, char_id: str) -> str:
         status = self.actionRepository.retrieveStatus(char_id, self.ticks, self.translate)
         return status
+
+    def addAdvertisments(self, filepath: str):
+        self.advertisementRepository.add_advertisments('input/advertisements.yml')
+
+    def addCharacters(self, filepath: str) -> None:
+        self.characterRepository.addCharacters(filepath)

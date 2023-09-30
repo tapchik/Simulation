@@ -16,16 +16,17 @@ class MainWindow(baseClass, Ui_MainWindow):
 	def __init__(self, simulation: sim.simulation, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
-		self.simulation: sim.simulation = simulation
-		self.characters_ids: list[str] = list(self.simulation.characters.keys()) # not used yet
+		self.simulation = simulation
+		self.characters_ids: list[str] = list(self.simulation.characterRepository.keys()) # not used yet
 		self.tickSpeed: int = 0
 
 		self.setupUi(self)
 		self.setWindowTitle("Simulation")
 
 		self.characterInfoWidgets: dict[str, CharacterInfoWidget] = {}
-		for char_id, char in self.simulation.characters.items(): 
-			widget = CharacterInfoWidget(char.name, self.simulation.retrieveCharacterStatus(char_id), self.simulation.characters[char_id].motives)
+		for char_id, char in self.simulation.characterRepository.items():
+			motives = self.simulation.characterRepository[char_id].motives
+			widget = CharacterInfoWidget(char.name, self.simulation.retrieveCharacterStatus(char_id), motives)
 			self.characterInfoWidgets[char_id] = widget
 		
 		layout = self.groupBox_3.layout()
@@ -34,8 +35,8 @@ class MainWindow(baseClass, Ui_MainWindow):
 		for charWidget in self.characterInfoWidgets.values():
 			layout.addWidget(charWidget)
 
-		self.timer=qtc.QTimer()
-		self.timer.timeout.connect(self.TickTicked)
+		self.timer = qtc.QTimer()
+		self.timer.timeout.connect(self.tickTicked)
 		
 		self.SpeedSlider.valueChanged.connect(self.SpeedSliderMoved)
 
@@ -51,49 +52,49 @@ class MainWindow(baseClass, Ui_MainWindow):
 			#self.TickTicked()
 			self.timer.stop()
 		self.resetTimer()
-		self.RedrawControlInfo()
+		self.redrawControlInfo()
 
 	def resetTimer(self): 
 		if self.tickSpeed != 0:
 			msec = int(1000 / self.tickSpeed)
 			self.timer.start(msec)
 
-	def RedrawCharacterInfoWidgets(self):
+	def redrawCharacterInfoWidgets(self):
 		"""Redraws status and motives of characters in the interface. """
-		for char_id in self.simulation.characters.keys():
-			character = self.simulation.characters[char_id]
+		for char_id in self.simulation.characterRepository.keys():
+			character = self.simulation.characterRepository[char_id]
 			status = self.simulation.retrieveCharacterStatus(char_id)
 			self.characterInfoWidgets[char_id].DrawStatus(status)
-			currentlyFulfillingMotive = self.simulation.currentlyFulfillingMotive(char_id)
-			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives, currentlyFulfillingMotive)
+			currently_fulfilling_motive = self.simulation.currentlyFulfillingMotive(char_id)
+			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives, currently_fulfilling_motive)
 	
-	def RedrawControlInfo(self):
-		self.TimeLabel.setText(self.simulation.RetrieveCurrentTime)
+	def redrawControlInfo(self):
+		self.TimeLabel.setText(self.simulation.retrieveCurrentTime)
 		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
 
-	def TickTicked(self):
+	def tickTicked(self):
 
 		self.simulation.stopEachFinishedAction()
 		self.simulation.assignActionForEachFreeCharacter()
 		self.simulation.eachCharacterPerformsAssignedAction()
 		# TODO: find a way to write a message in a console
-		#item = qtw.QListWidgetItem(f"{self.simulation.RetrieveCurrentTime}: {ad.message_start}".format(name=character.name))
-		#self.listOfMessagesWidget.insertItem(0, item)
+		# item = qtw.QListWidgetItem(f"{self.simulation.RetrieveCurrentTime}: {ad.message_start}".format(name=character.name))
+		# self.listOfMessagesWidget.insertItem(0, item)
 
 		# time passes
 		self.simulation.progress(1)
 		
 		# redrawing interface
-		self.RedrawCharacterInfoWidgets()
-		self.RedrawControlInfo()
+		self.redrawCharacterInfoWidgets()
+		self.redrawControlInfo()
+
 
 if __name__=='__main__':
-
-	characters = read_characters.read_characters('input/characters.yml', 'translation/russian.yml')
 	
 	translate = sim.translate('translation/russian.yml')
-	simulation = sim.simulation(characters=characters, translate=translate)
-	simulation.advertisementRepository.add_advertisments('input/advertisements.yml')
+	simulation = sim.simulation(translate=translate)
+	simulation.addAdvertisments('input/advertisements.yml')
+	simulation.addCharacters('input/characters.yml')
 
 	app = qtw.QApplication(sys.argv)
 	w = MainWindow(simulation)
