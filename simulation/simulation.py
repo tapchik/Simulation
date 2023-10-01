@@ -80,5 +80,7 @@ class simulation:
             return self.translate['state/idle']
         text = action.advertisement.status
         time_remaining = action.started + action.advertisement.duration - self.ticks
+        if time_remaining == 0:
+            return "Done!"
         status = f"{text} ({time_remaining} left)"
         return status
