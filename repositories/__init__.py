@@ -1,3 +1,3 @@
 from repositories.characterRepository import CharacterRepository
-from repositories.actionRepository import actionRepository
-from repositories.advertismentRepository import advertismentRepository
+from repositories.actionRepository import ActionRepository
+from repositories.advertisementRepository import AdvertisementRepository

@@ -5,7 +5,6 @@ import PyQt5.QtGui as qtg
 import PyQt5.uic as uic
 
 import simulation as sim
-from readers import read_characters
 
 from UI.CharacterInfoWidget import CharacterInfoWidget
 
@@ -13,19 +12,19 @@ Ui_MainWindow, baseClass = uic.loadUiType('UI/MainWindow.ui')
 
 class MainWindow(baseClass, Ui_MainWindow):
 
-	def __init__(self, simulation: sim.simulation, *args, **kwargs):
+	def __init__(self, simulation: sim.Simulation, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
 		self.simulation = simulation
-		self.characters_ids: list[str] = list(self.simulation.characterRepository.keys()) # not used yet
+		self.character_ids: list[str] = self.simulation._characters.retrieveCharacterIds()
 		self.tickSpeed: int = 0
 
 		self.setupUi(self)
 		self.setWindowTitle("Simulation")
 
 		self.characterInfoWidgets: dict[str, CharacterInfoWidget] = {}
-		for char_id, char in self.simulation.characterRepository.items():
-			motives = self.simulation.characterRepository[char_id].motives
+		for char_id, char in self.simulation._characters.items():
+			motives = self.simulation._characters[char_id].motives
 			widget = CharacterInfoWidget(char.name, self.simulation.retrieveCharacterStatus(char_id), motives)
 			self.characterInfoWidgets[char_id] = widget
 		
@@ -49,7 +48,7 @@ class MainWindow(baseClass, Ui_MainWindow):
 		self.SpeedLabel.setText(f"Speed: {self.tickSpeed}")
 		
 		if old_value != 0 and new_value == 0: 
-			#self.TickTicked()
+			# self.TickTicked()
 			self.timer.stop()
 		self.resetTimer()
 		self.redrawControlInfo()
@@ -61,19 +60,20 @@ class MainWindow(baseClass, Ui_MainWindow):
 
 	def redrawCharacterInfoWidgets(self):
 		"""Redraws status and motives of characters in the interface. """
-		for char_id in self.simulation.characterRepository.keys():
-			character = self.simulation.characterRepository[char_id]
+		for char_id in self.character_ids:
 			status = self.simulation.retrieveCharacterStatus(char_id)
+			motives = self.simulation.retrieveCharacterMotives(char_id)
+			currently_fulfilling_motive = self.simulation.retrieveCurrentlyFulfillingMotive(char_id)
 			self.characterInfoWidgets[char_id].DrawStatus(status)
-			currently_fulfilling_motive = self.simulation.currentlyFulfillingMotive(char_id)
-			self.characterInfoWidgets[char_id].DrawMotiveValues(character.motives, currently_fulfilling_motive)
+			self.characterInfoWidgets[char_id].DrawMotiveValues(motives, currently_fulfilling_motive)
 	
 	def redrawControlInfo(self):
-		self.TimeLabel.setText(self.simulation.retrieveCurrentTime)
-		self.TicksLabel.setText(f"({self.simulation.ticksPassed} ticks)")
+		current_time = self.simulation.retrieveCurrentTime
+		ticks_passed = self.simulation.ticksPassed
+		self.TimeLabel.setText(current_time)
+		self.TicksLabel.setText(f"({ticks_passed} ticks)")
 
 	def tickTicked(self):
-
 		self.simulation.stopEachFinishedAction()
 		self.simulation.assignActionForEachFreeCharacter()
 		self.simulation.eachCharacterPerformsAssignedAction()
@@ -89,11 +89,11 @@ class MainWindow(baseClass, Ui_MainWindow):
 		self.redrawControlInfo()
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
 	
-	translate = sim.translate('translation/russian.yml')
-	simulation = sim.simulation(translate=translate)
-	simulation.addAdvertisments('input/advertisements.yml')
+	simulation = sim.Simulation()
+	simulation.addTranslation('translation/russian.yml')
+	simulation.add_advertisments('input/advertisements.yml')
 	simulation.addCharacters('input/characters.yml')
 
 	app = qtw.QApplication(sys.argv)

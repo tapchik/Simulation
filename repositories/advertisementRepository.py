@@ -3,23 +3,24 @@ from random import choice
 import yaml
 import simulation as sim
 
-class advertismentRepository(dict[str, sim.advertisement]):
+
+class AdvertisementRepository(dict[str, sim.advertisement]):
 
     def chooseAdvertismentToFulfillMotive(self, motive: str | None) -> sim.advertisement | None: 
         all_ads = self.values()
-        options = list(filter(lambda ad: ad.motive==motive, all_ads))
+        options = list(filter(lambda ad: ad.motive == motive, all_ads))
         action = choice(options) if options != [] else None
         return action
 
-    def _assemble_advertisement(self, input: dict) -> sim.advertisement: 
+    def _assemble_advertisement(self, add: dict) -> sim.advertisement:
         option = sim.advertisement(
-            action=input['action'], 
-            motive=input['motive'],
-            status=input['status'],
-            message_start=input['message_start'],
-            message_end=input['message_end'], 
-            fulfills=input['fulfills'],
-            duration=input['duration']
+            action=add['action'],
+            motive=add['motive'],
+            status=add['status'],
+            message_start=add['message_start'],
+            message_end=add['message_end'],
+            fulfills=add['fulfills'],
+            duration=add['duration']
         )
         return option
 

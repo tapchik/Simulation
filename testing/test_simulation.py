@@ -11,15 +11,15 @@ class SimpleTest(unittest.TestCase):
                 }
         )
         # TODO replace this line: self.simulation = sim.simulation(characters={"alex": character})
-        self.simulation = sim.simulation()
+        self.simulation = sim.Simulation()
 
     def testCharacterLoads(self):
-        char = self.simulation.characterRepository['alex']
+        char = self.simulation._characters['alex']
         self.assertEquals(char.name, "Alex")
 
     # Returns True or False. 
     def testDecayingMotives(self):        
-        char = self.simulation.characterRepository['alex']
+        char = self.simulation._characters['alex']
         self.simulation.progress(10)
         self.assertEqual(char.motives['bladder'].value, 20)
 

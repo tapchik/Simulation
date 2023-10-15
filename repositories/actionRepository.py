@@ -1,6 +1,7 @@
 import simulation as sim
 
-class actionRepository(dict[str, sim.action]): 
+
+class ActionRepository(dict[str, sim.action | None]):
 
     def currentlyFulfillingMotive(self, char_id: str) -> str | None: 
         # register unknown char_id and set action to None
@@ -8,13 +9,13 @@ class actionRepository(dict[str, sim.action]):
             self[char_id] = None
         # retrieve action
         action = self[char_id]
-        if action == None:
+        if action is None:
             return None
         return action.advertisement.motive
     
     def stopEachFinishedAction(self, current_time: int) -> None:
         for char_id, action in self.items():
-            if action == None:
+            if action is None:
                 continue
             time_passed = current_time - action.started
             if time_passed >= action.advertisement.duration: 
@@ -24,7 +25,7 @@ class actionRepository(dict[str, sim.action]):
         """Returns a list of characters ids that are not busy with an action"""
         free_characters = []
         for char_id, action in self.items():
-            if action == None:
+            if action is None:
                 free_characters += [char_id]
         return free_characters
     
@@ -32,7 +33,7 @@ class actionRepository(dict[str, sim.action]):
         """Returns a list of character ids that are busy with an action"""
         busy_characters = []
         for char_id, action in self.items():
-            if action != None:
+            if action is not None:
                 busy_characters += [char_id]
         return busy_characters
 
@@ -40,7 +41,7 @@ class actionRepository(dict[str, sim.action]):
         if char_id not in self:
             self[char_id] = None
         action = self[char_id]
-        if action == None:
+        if action is None:
             return translate['state/idle']
         text = action.advertisement.status
         time_remaining = action.started + action.advertisement.duration - ticks

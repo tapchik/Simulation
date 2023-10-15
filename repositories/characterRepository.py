@@ -30,3 +30,9 @@ class CharacterRepository(dict[str, sim.character]):
             for char_id, item in read_data['characters'].items():
                 char = self._assemble_character(item)
                 self[char_id] = char
+
+    def retrieveCharacterIds(self) -> list[str]:
+        character_ids = []
+        for char_id, character in self.items():
+            character_ids += [char_id]
+        return character_ids
