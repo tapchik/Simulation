@@ -2,7 +2,7 @@
 
 > This application allows to simulate people's behaviour based on their motives. 
 
-## Instalation
+## Installation
 
 1. Navigate to project folder "Simulation": 
     - `cd Simulation`
