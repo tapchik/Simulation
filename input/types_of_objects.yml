@@ -14,7 +14,7 @@ objects:
     fulfills: [hunger]
   # bedroom
   - type: bed
-    fulfills: [sleep, masturbate]
+    fulfills: [sleep]
   # office
   - type: computer
     fulfills: [entertainment]

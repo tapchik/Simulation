@@ -9,7 +9,6 @@ characters:
       'hygiene': {regularity: 0.8}
       'bladder': {regularity: 2.0}
       #'social': {regularity: 1.5}
-      #'masturbate': {regularity: 1.0}
   andrew:
     name: Андрей
     sex: male
